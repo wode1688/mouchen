@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/wode1688/mouchen/main/shared/advice.schema.json",
+  "title": "AdviceRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "user_id", "domain", "level", "goal_quote", "evidence", "action", "first_step", "prediction"],
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "user_id": {"type": "string"},
+    "domain": {"type": "string"},
+    "level": {"enum": ["L1", "L2", "L3", "L4"]},
+    "goal_quote": {"type": "string", "minLength": 1},
+    "evidence": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "action": {"type": "string", "minLength": 1},
+    "first_step": {"type": "string", "minLength": 1},
+    "alternative": {"type": ["string", "null"]},
+    "prediction": {
+      "type": "object",
+      "required": ["outcome", "deadline", "confidence", "observable"],
+      "properties": {
+        "outcome": {"type": "string"},
+        "deadline": {"type": "string", "format": "date-time"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "observable": {"type": "boolean"}
+      }
+    }
+  }
+}
