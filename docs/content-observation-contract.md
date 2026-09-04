@@ -1,6 +1,6 @@
 # Content observation contract
 
-Mouchen distinguishes observed content from facts about the account owner.
+AI替身 (Your Personal AI Delegate) distinguishes observed content from facts about the account owner.
 Text seen in a chat, search result, document, video, or application is evidence
 with provenance; it is not automatically the owner's belief, commitment, or
 problem.

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/wode1688/mouchen/main/shared/event.schema.json",
-  "title": "MouchenEvent",
+  "title": "AI替身 Event",
   "type": "object",
   "additionalProperties": false,
   "required": ["event_id", "user_id", "source", "type", "occurred_at", "facts", "confidence", "sensitivity"],

@@ -1,18 +1,18 @@
-# 谋臣愿景 / Mouchen Vision
+# AI替身愿景 / Product Vision
 
 ## 北极星
 
-谋臣最终不是一个更会聊天的机器人，而是一个始终受用户控制、能理解目标与现实差距、在关键时刻主动提醒并帮助行动的个人 AI 幕僚。
+AI替身最终不是一个更会聊天的机器人，而是一个始终受用户控制、能理解目标与现实差距、在关键时刻主动提醒并帮助行动的个人智能系统。
 
 它不替用户决定人生。它帮助用户减少因遗忘、惯性、信息噪音和认知盲区造成的损失。
 
-> 用户掌握目标、数据和最终决定；谋臣负责观察、求证、建言和复盘。
+> 用户掌握目标、数据和最终决定；AI替身负责观察、求证、建言和复盘。
 
 ## 最终实现的模样
 
 ### 1. 用户拥有的长期记忆
 
-谋臣保存的不是无限堆积的聊天，而是用户可以查看、纠正、迁移和删除的事实与决策账本：
+AI替身保存的不是无限堆积的聊天，而是用户可以查看、纠正、迁移和删除的事实与决策账本：
 
 - 当前目标及历史版本；
 - 用户明确表达的承诺、偏好和红线；
@@ -25,7 +25,7 @@
 
 ### 2. 持续更新、最小化的个人局势图
 
-在用户逐项授权后，成熟的谋臣可以连接手机、电脑、日历、文件、可穿戴设备和用户主动提供的信息。
+在用户逐项授权后，成熟的 AI替身可以连接手机、电脑、日历、文件、可穿戴设备和用户主动提供的信息。
 
 它不追求“看见一切”，只收集能够回答三个问题的最小信号：
 
@@ -37,7 +37,7 @@
 
 ### 3. 主动但克制的判断
 
-谋臣会在目标长期没有真实进展、时间和资源明显错配、承诺相互冲突、可信风险出现、机会高度相关且有时效，或已采纳建议到了验证时间时主动出现。
+AI替身会在目标长期没有真实进展、时间和资源明显错配、承诺相互冲突、可信风险出现、机会高度相关且有时效，或已采纳建议到了验证时间时主动出现。
 
 每次建言至少回答：
 
@@ -67,7 +67,7 @@ A4  外部或不可逆操作，逐次获得用户确认
 
 ### 5. 从结果中学习，而不是讨好用户
 
-谋臣不以消息数量、使用时长或让用户产生依赖为成功标准。它学习的是：
+AI替身不以消息数量、使用时长或让用户产生依赖为成功标准。它学习的是：
 
 - 哪些提醒真正改变了结果；
 - 哪些建议被采纳但没有效果；
@@ -94,7 +94,7 @@ A4  外部或不可逆操作，逐次获得用户确认
 
 用户说：“未来三个月最重要的是拿到三个付费企业客户，同时不能让广告现金流失控。”
 
-在授权范围内，谋臣可以：
+在授权范围内，AI替身可以：
 
 1. 发现本周时间大量流向与目标无关的工作；
 2. 引用日程和任务投入作为证据，而不是猜测用户懒惰；
@@ -109,7 +109,7 @@ A4  外部或不可逆操作，逐次获得用户确认
 
 ## 信任契约
 
-谋臣必须长期遵守：
+AI替身必须长期遵守：
 
 - 不隐藏采集，不绕过系统权限；
 - 不默认上传完整原文，不采集密码或密钥；
@@ -134,9 +134,9 @@ A4  外部或不可逆操作，逐次获得用户确认
 - 所有执行动作的外部状态回读率：100%；
 - 未经当次确认的高风险操作：0。
 
-## 谋臣不是什么
+## AI替身不是什么
 
-谋臣不是隐形监控软件、全知的个人数字分身、绕过平台安全边界的工具、替人决定职业关系和财务的人生驾驶员、靠制造焦虑提高留存的注意力产品，也不是用“AI 已处理”掩盖没有验证结果的自动化脚本。
+AI替身不是隐形监控软件，不是复制人格或冒充用户的数字克隆，也不是绕过平台安全边界、替人决定职业关系和财务、靠制造焦虑提高留存，或用“AI 已处理”掩盖没有验证结果的系统。
 
 ## 从今天到愿景
 
@@ -151,7 +151,7 @@ A4  外部或不可逆操作，逐次获得用户确认
   ↓
 开放事件协议与经过权限审查的连接器生态
   ↓
-用户真正拥有的个人 AI 幕僚
+用户真正拥有的 AI替身
 ~~~
 
 权限的扩大必须慢于安全和信任的建立。
@@ -160,8 +160,8 @@ A4  外部或不可逆操作，逐次获得用户确认
 
 ## English summary
 
-Mouchen's long-term goal is not to become a more conversational chatbot. It aims to become a user-controlled personal AI aide that notices meaningful gaps between goals and reality, provides evidence-backed advice at the right moment, prepares bounded actions, and learns from verified outcomes.
+AI替身 — Your Personal AI Delegate — is not intended to become a more conversational chatbot. It aims to become a user-controlled personal AI layer that notices meaningful gaps between goals and reality, provides evidence-backed advice at the right moment, prepares bounded actions, and learns from verified outcomes.
 
 Its intended final form combines user-owned portable memory, a permissioned and minimal personal situation model, proactive but interruption-aware judgment, graduated autonomy with human confirmation for consequential actions, learning from outcomes instead of engagement, and one consistent ledger across devices and model providers.
 
-Mouchen must never become covert surveillance, an autonomous life controller, or a system that confuses a submitted action with a verified result.
+AI替身 must never become covert surveillance, an autonomous life controller, an impersonation system, or a product that confuses a submitted action with a verified result.

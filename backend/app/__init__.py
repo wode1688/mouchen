@@ -1,1 +1,1 @@
-"""Public, provider-independent core for Mouchen."""
+"""Public, provider-independent core for AI替身 (legacy codename: Mouchen)."""

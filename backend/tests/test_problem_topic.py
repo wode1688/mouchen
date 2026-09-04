@@ -1,7 +1,11 @@
 import pytest
 
 from app.domain.models import Event, Goal
-from app.domain.problem_signals import detect_problem, deterministic_intervention_allowed
+from app.domain.problem_signals import (
+    choose_goal,
+    detect_problem,
+    deterministic_intervention_allowed,
+)
 
 
 def _goal() -> Goal:
@@ -260,3 +264,20 @@ def test_direct_user_statement_can_trigger_deterministic_advice():
 
     assert deterministic_intervention_allowed(event) is True
     assert detect_problem(event, _goal(), 0.9) is not None
+
+
+def test_ai_delegate_brand_is_recognized_as_a_meta_goal():
+    meta_goal = Goal(
+        user_id="u1",
+        domain="general",
+        title="让 AI替身主动发现问题",
+        quote="AI替身应该更了解我",
+    )
+    concrete_goal = _goal()
+
+    chosen, _ = choose_goal(
+        _payment_event("Payment status", "Payment failed"),
+        [meta_goal, concrete_goal],
+    )
+
+    assert chosen == concrete_goal

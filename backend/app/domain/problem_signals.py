@@ -68,12 +68,14 @@ _NEAR_TERM_DEADLINE = re.compile(
 _ISO_DATE = re.compile(r"(?<!\d)(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})(?!\d)")
 
 _META_GOAL = re.compile(
-    r"(?:谋臣|mouchen).{0,36}(?:主动|proactive|发现问题|建言|建议|提醒|介入|了解我)|"
-    r"(?:主动|proactive|发现问题|建言|建议|提醒|介入|了解我).{0,36}(?:谋臣|mouchen)",
+    r"(?:AI\s*替身|谋臣|mouchen).{0,36}(?:主动|proactive|发现问题|建言|建议|提醒|介入|了解我)|"
+    r"(?:主动|proactive|发现问题|建言|建议|提醒|介入|了解我).{0,36}(?:AI\s*替身|谋臣|mouchen)",
     re.IGNORECASE,
 )
 _MOUCHEN_PRODUCT_CONTEXT = re.compile(
-    r"\b(?:mouchen|com\.mouchen)\b|谋臣(?:应用|app|客户端|后端|模型|建言|提醒|介入|功能|系统)",
+    r"\b(?:mouchen|com\.mouchen)\b|"
+    r"AI\s*替身(?:应用|app|客户端|后端|模型|建言|提醒|介入|功能|系统)?|"
+    r"谋臣(?:应用|app|客户端|后端|模型|建言|提醒|介入|功能|系统)",
     re.IGNORECASE,
 )
 
@@ -842,7 +844,7 @@ def _goal_score(goal: Goal, text: str, package_name: str) -> float:
     if _is_meta_goal(goal):
         # A goal describing how the assistant itself should behave is a policy
         # coordinate, not the destination of ordinary business/life evidence.
-        # Keep it selectable for genuine Mouchen product work, but make it lose
+        # Keep it selectable for genuine product work, but make it lose
         # to any concrete goal for unrelated observations.
         score *= (
             0.50

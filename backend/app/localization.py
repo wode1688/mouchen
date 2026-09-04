@@ -41,7 +41,7 @@ _LOCALE_ALIASES = {
 
 
 def normalize_locale(value: str | None, *, strict: bool = True) -> str:
-    """Return one stable locale used by every Mouchen client and prompt."""
+    """Return one stable locale used by every AI替身 client and prompt."""
 
     raw = str(value or "").strip()
     if not raw:
@@ -210,10 +210,10 @@ def validate_advice_display_translation(
 def localized_model_locale_mismatch(locale: str | None) -> str:
     if is_english(locale):
         return (
-            "The model returned content in the wrong language, so Mouchen did "
+            "The model returned content in the wrong language, so AI替身 did "
             "not publish it. Please try again."
         )
-    return "模型返回了错误语言的内容，谋臣未发布该结果。请重试。"
+    return "模型返回了错误语言的内容，AI替身未发布该结果。请重试。"
 
 
 def localized_observation(source: str, quote: str, locale: str | None) -> str:

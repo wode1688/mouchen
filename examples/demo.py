@@ -22,7 +22,7 @@ def main() -> None:
     goal = Goal(
         user_id="demo-user",
         domain="work",
-        title="发布可运行的谋臣公开核心",
+        title="发布可运行的 AI替身公开核心",
         quote="本周完成可运行、可验证的公开核心",
         target={"weekly_hours": 10},
     )
