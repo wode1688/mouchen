@@ -1,49 +1,71 @@
 # 谋臣 Mouchen
 
-## 不等你提问的，可审计主动私人参谋
+## 让每个人拥有一位真正站在自己一边的 AI 谋臣
 
-**谋臣面向高负荷的创业者和知识工作者。** 在用户逐项授权后，它把日历、通知、待办和工作上下文与长期目标对照，提前发现冲突、遗漏、风险和机会；给出证据与行动草稿，需要时等待用户确认，执行后核对真实结果。
+大模型正在成为通用智力，Agent 正在成为通用劳动力。但今天的人仍要自己发现问题、整理上下文、学习提示词、挑选工具、监督执行，再检查事情到底有没有完成。
 
-> 大多数 AI 帮你回答已经想到的问题。谋臣要解决的是：在正确的时间，发现你还没来得及问、却正在影响结果的事情。
+**谋臣要成为 AI 时代由用户拥有的个人决策与行动层。** 成熟后的谋臣将长期理解一个人的目标、处境、偏好和边界，不等提问就发现风险与机会；带着证据提出判断，准备行动草稿，经用户确认后调度模型、Agent、互联网服务和设备，直到真实结果被核对。
 
-**产品状态：** Android-first 私测 Alpha；已有 Android、Windows 私测客户端，iOS 源码仍在验证。<br>
-**本仓状态：** Developer Preview；当前仅开源平台无关的判断与安全核心，三个客户端均未公开。
+> 不是让每个人学会越来越多的 AI 工具，而是让一个 AI 先学会这个人，再替他使用不断增长的全部 AI 能力。
 
-[3 分钟体验公开核心](#3-分钟体验公开核心) · [开源范围](#本仓库到底公开了什么) · [最终形态](VISION.md) · [参与谋臣](#参与谋臣)
+**今天的切入点：** 为高负荷创业者和知识工作者提供可审计的主动私人参谋，先解决客户遗漏、现金流异常、时间偏航和关键承诺失约。<br>
+**长期的终局：** 成为每个人进入数字世界、调用 AI 与连接现实设备的默认入口。
 
-## 它不是另一个聊天机器人
+[理解这门生意](#它的上限不是工具而是个人-ai-入口) · [查看产品路径](#从创业者的谋臣到个人-ai-基础设施) · [3 分钟体验公开核心](#3-分钟体验公开核心) · [参与谋臣](#参与谋臣)
 
-| | 常见聊天 AI | 谋臣要成为的产品 |
-|---|---|---|
-| 起点 | 等用户发现问题并提问 | 在授权范围内持续比较现实与目标 |
-| 输出 | 一次回答 | 带来源的判断、建议与行动草稿 |
-| 行动 | 回答结束即结束 | 风险闸门、用户确认、有限执行 |
-| 结果 | 对话听起来是否合理 | 外部状态是否改变、建议是否真正有用 |
-| 权力边界 | 主要依赖一次提示词 | 授权可撤回，重要动作逐次确认，全程可追溯 |
+## 它的上限不是工具，而是个人 AI 入口
 
-谋臣的核心闭环是：
+搜索掌握信息入口，电商掌握消费入口，聊天工具掌握关系入口，支付掌握交易终点。它们解决的是一段流程；真正了解个人意图的 AI，有机会站在这些入口之前，替用户选择模型、工具、服务和行动路径，并把分散能力串成一个结果。
+
+这门生意的上限，不是卖一个更聪明的待办软件，而是成为**个人意图与整个数字世界之间的调度层**：
+
+- **潜在用户不止一个职业**：创业者只是首发楔子；工作、消费、学习、健康、关系和生活决策，都可能需要同一个长期理解自己的智能系统，而不是每换一个 App 就从零开始。
+- **使用越久越有价值**：通用模型可以替换，但个人目标、偏好、授权边界、历史判断和结果反馈会持续复利，让谋臣越来越知道何时该说、何时闭嘴、什么行动真正有效。
+- **从建议走向结果入口**：当谋臣能够在用户确认下协调搜索、购物、内容、本地服务、专业服务和现实设备，它就可能成为选择服务、调度行动和完成结果的上游入口。
+
+订阅可以是起点；长期价值可能来自专业版本、企业授权、可信执行服务，以及 Agent 与服务生态的技术服务。任何未来的商业推荐都应披露利益关系，付费不能改变对用户的推荐排序。**这是谋臣的平台路线判断，不是当前收入、估值、市场份额或投资回报承诺。**
+
+## 为什么是现在
+
+AI 能力正在迅速增加，但能力越多，普通人越难判断该用哪个模型、哪个 Agent、给它多少权限，以及输出究竟有没有变成结果。未来稀缺的不会只是更强的模型，而是四件事：长期围绕一个人工作的上下文、可撤回的权限、逐步赢得的信任，以及被真实结果验证过的行动记录。
+
+谋臣押注的不是某一个模型。模型、Agent 和设备都可以更换；用户拥有的目标、记忆、权限和结果账本持续存在。谁能安全地把这四层连接起来，谁就有机会成为下一代个人计算入口。
+
+## 从创业者的谋臣，到个人 AI 基础设施
+
+1. **主动私人参谋**：先服务决策价值高、遗漏代价大的创业者和知识工作者。发现目标偏航、风险和机会，提供证据与可执行的第一步。
+2. **跨设备个人决策系统**：让手机、电脑和未来的穿戴设备共享同一套目标、记忆、建言、权限和结果账本，换设备、换模型也不必重新认识你。
+3. **个人世界的行动层**：让经过审查的 Agent、应用、服务与设备接入；外部能力负责执行，谋臣负责理解你、选择能力、控制风险并核验结果。
 
 ~~~text
-明确授权的信号 → 本地过滤 → 长期记忆 → 局势分析
-→ 建议 / 行动草稿 → 风险闸门 → 用户确认
-→ 有限执行 → 外部状态回读 → 从结果中学习
+你的目标、处境与边界
+          ↓
+       谋臣
+  理解 → 判断 → 授权 → 调度 → 核验
+     ↙        ↓         ↘
+  模型与 Agent   互联网服务   手机、穿戴与机器人
+          ↓
+       真实结果
+          ↺
 ~~~
 
-价值不在于回答更多问题，而在于更早发现真正重要的事，同时把误打扰、权限、隐私和错误执行控制在可验证的边界内。
+完整闭环是：**明确授权的信号 → 本地过滤 → 长期记忆 → 局势分析 → 建议或行动草稿 → 风险闸门 → 用户确认 → 有限执行 → 外部状态回读 → 从结果中学习。**
 
-## 如果谋臣已经成熟
+## 一个成熟后的使用场景
 
-你告诉谋臣一个目标：
+你告诉谋臣：“未来三个月拿到三个付费企业客户，同时不能让广告现金流失控。”
 
-> 未来三个月拿到三个付费企业客户，同时不能让广告现金流失控。
+它发现本周大量时间正在流向无关工作，指出某个高意向客户已经多日没有跟进，并在广告支出异常时先核实证据。它准备好客户跟进和预算调整草稿，但不会擅自发送消息或修改账户。你确认后，它只执行被允许的动作并回读平台真实状态；七天后再核对回复率、预约数和现金流，判断这次建议究竟改变了什么。
 
-在你的授权范围内，它会发现本周大量时间正在流向无关工作，指出某个高意向客户已经多日没有跟进，并在广告支出异常时先核实证据。它可以准备客户跟进和预算调整草稿，但不会擅自发送消息或修改账户。
+最终价值不是“AI 和你聊了很多”，而是更早发现问题、减少关键遗漏，并能证明哪些判断改变了结果。
 
-你确认后，它只执行被允许的动作并回读平台真实状态。七天后，它核对回复率、预约数和现金流，判断这次建议究竟改变了什么。
+> 以上是目标产品体验和商业路线，不是当前公开仓库已经具备的完整能力，也不是未经验证的用户成绩。
 
-最终价值不是“AI 和你聊了很多”，而是你更早发现问题、减少关键遗漏，并能证明哪些建议改变了结果。
+## 方法论来自真实业务的决策与风控
 
-> 以上是目标产品体验，不是当前公开仓库已经具备的完整能力，也不是未经验证的用户成绩。
+谋臣的方法论，来自创始人在高频广告运营中对自动决策、执行和风险控制的长期实践：当每次判断都可能直接影响收入和损失时，AI 不能只生成一段看似正确的文字，必须看见上下文、说明证据、尊重权限，并核对动作是否真正完成。
+
+我们正在把这条只服务单一业务的闭环，扩展成长期围绕每个人工作的个人智能系统。
 
 ## 产品今天做到哪一步
 
@@ -141,7 +163,9 @@ Demo 会展示一条虚拟事件如何形成证据、触发建言、完成价值
 
 ## English
 
-**Mouchen is an auditable proactive private strategist for high-load founders and knowledge workers.** With explicit permission, it is designed to compare bounded signals with a user's goals, surface conflicts, risks, omissions and opportunities, prepare evidence-backed advice or action drafts, require confirmation when needed, and verify the real outcome.
+**Mouchen is building the user-owned personal decision and action layer for the AI era.** Models and agents are becoming abundant; what remains scarce is an AI that continuously understands one person's goals, context, permissions and outcomes. Mouchen is designed to spot what matters before the user asks, provide evidence-backed judgment, and—with confirmation—coordinate models, services and devices until the real result is verified.
+
+The ambition is not a better reminder app. It is a personal intelligence layer between human intent and the digital world: starting with an auditable proactive strategist for high-load founders and knowledge workers, then expanding into a cross-device system and a trusted ecosystem for agents and services.
 
 The complete product is in controlled Alpha. Android, Windows and iOS client code is **not** included in this repository. This public Developer Preview contains only the provider-independent Python decision and safety core, JSON schemas, 18 tests, and an offline synthetic-data demo. It collects no device data, requires no account or API key, calls no model service, and performs no external action.
 
