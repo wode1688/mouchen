@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "AI替身";
+"NSCalendarsFullAccessUsageDescription" = "AI替身读取你授权的日历，用于发现时间冲突、承诺滑动和目标投入偏差。";
+"NSCalendarsUsageDescription" = "AI替身读取你授权的日历，用于发现时间冲突和目标偏差。";
+"NSContactsUsageDescription" = "AI替身仅在你点击采集时读取联系人，用于建立你自己的关系背景。";
+"NSLocationWhenInUseUsageDescription" = "AI替身仅在你点击采集时获取一次位置，用于判断通勤和场景。";

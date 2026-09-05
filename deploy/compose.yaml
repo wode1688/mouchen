@@ -1,0 +1,229 @@
+name: mouchen
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+      args:
+        PARAFORMER_ARCHIVE_NAME: ${MOUCHEN_STT_BUILD_ARCHIVE_NAME:-sherpa-onnx-paraformer-zh-2023-09-14.tar.bz2}
+        PARAFORMER_ARCHIVE_SHA256: ${MOUCHEN_STT_BUILD_ARCHIVE_SHA256:-9c49fd9c6fb63de8e18c1054cf3d100f804741b7e608e187923cd8ff09fa9f03}
+        PARAFORMER_ARCHIVE_SIZE: ${MOUCHEN_STT_BUILD_ARCHIVE_SIZE:-234051698}
+        PARAFORMER_MODEL_SHA256: ${MOUCHEN_STT_BUILD_MODEL_SHA256:-f36a0433bcf096bd6d6f11b80a3ac8bed110bdca632fe0d731df8d1a84475945}
+        PARAFORMER_MODEL_SIZE: ${MOUCHEN_STT_BUILD_MODEL_SIZE:-243371218}
+        PARAFORMER_VOCAB_SHA256: ${MOUCHEN_STT_BUILD_VOCAB_SHA256:-59aba8873a2ed1e122c25fee421e25f283b63290efbde85c1f01a853d83cb6e6}
+    image: ${MOUCHEN_IMAGE:-mouchen-backend:private-alpha}
+    init: true
+    restart: unless-stopped
+    user: "10001:10001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: ${MOUCHEN_BACKEND_MEMORY_LIMIT:-1536m}
+    cpus: ${MOUCHEN_BACKEND_CPUS:-4.0}
+    stop_grace_period: 30s
+    depends_on:
+      stt:
+        condition: service_healthy
+    environment:
+      MOUCHEN_DB_PATH: /data/mouchen.db
+      MOUCHEN_API_TOKEN_FILE: /run/secrets/mouchen_api_token
+      # The static private-alpha owner token is a temporary migration path.
+      # Commercial operation rejects it unless the operator explicitly opens
+      # this switch while the historical owner claims a password account.
+      MOUCHEN_LEGACY_AUTH_ENABLED: "${MOUCHEN_LEGACY_AUTH_ENABLED:-false}"
+      MOUCHEN_REQUIRE_API_TOKEN: "${MOUCHEN_LEGACY_AUTH_ENABLED:-false}"
+      MOUCHEN_BOOTSTRAP_REGISTRATION_CODE_FILE: /run/secrets/mouchen_registration_code
+      MOUCHEN_REGISTRATION_MODE: "${MOUCHEN_REGISTRATION_MODE:-closed}"
+      MOUCHEN_ALLOW_OPEN_REGISTRATION: "${MOUCHEN_ALLOW_OPEN_REGISTRATION:-false}"
+      MOUCHEN_AUTH_TOKEN_TTL_DAYS: "${MOUCHEN_AUTH_TOKEN_TTL_DAYS:-90}"
+      MOUCHEN_TRUSTED_PROXY_CIDRS: "${MOUCHEN_TRUSTED_PROXY_CIDRS:-}"
+      MOUCHEN_TRUSTED_PROXY_HEADER: "${MOUCHEN_TRUSTED_PROXY_HEADER:-x-forwarded-for}"
+      MOUCHEN_MAX_REQUEST_BYTES: "${MOUCHEN_MAX_REQUEST_BYTES:-262144}"
+      MOUCHEN_MAX_EVENT_FACTS_BYTES: "${MOUCHEN_MAX_EVENT_FACTS_BYTES:-65536}"
+      MOUCHEN_MAX_AUDIO_BYTES: "${MOUCHEN_MAX_AUDIO_BYTES:-4320000}"
+      MOUCHEN_LOGIN_RATE_WINDOW_SECONDS: "${MOUCHEN_LOGIN_RATE_WINDOW_SECONDS:-900}"
+      MOUCHEN_LOGIN_ACCOUNT_ATTEMPTS_PER_WINDOW: "${MOUCHEN_LOGIN_ACCOUNT_ATTEMPTS_PER_WINDOW:-20}"
+      MOUCHEN_LOGIN_SOURCE_ATTEMPTS_PER_WINDOW: "${MOUCHEN_LOGIN_SOURCE_ATTEMPTS_PER_WINDOW:-120}"
+      MOUCHEN_REGISTRATION_RATE_WINDOW_SECONDS: "${MOUCHEN_REGISTRATION_RATE_WINDOW_SECONDS:-900}"
+      MOUCHEN_REGISTRATION_SOURCE_ATTEMPTS_PER_WINDOW: "${MOUCHEN_REGISTRATION_SOURCE_ATTEMPTS_PER_WINDOW:-10}"
+      MOUCHEN_AUTH_HASH_CONCURRENCY: "${MOUCHEN_AUTH_HASH_CONCURRENCY:-2}"
+      MOUCHEN_AUTHENTICATED_RATE_WINDOW_SECONDS: "${MOUCHEN_AUTHENTICATED_RATE_WINDOW_SECONDS:-60}"
+      MOUCHEN_AUTHENTICATED_REQUESTS_PER_USER_WINDOW: "${MOUCHEN_AUTHENTICATED_REQUESTS_PER_USER_WINDOW:-600}"
+      MOUCHEN_AUTHENTICATED_REQUESTS_GLOBAL_WINDOW: "${MOUCHEN_AUTHENTICATED_REQUESTS_GLOBAL_WINDOW:-5000}"
+      MOUCHEN_RATE_LIMITER_MAX_KEYS: "${MOUCHEN_RATE_LIMITER_MAX_KEYS:-50000}"
+      MOUCHEN_RATE_LIMITER_MAX_HITS: "${MOUCHEN_RATE_LIMITER_MAX_HITS:-250000}"
+      MOUCHEN_RATE_LIMITER_SWEEP_SECONDS: "${MOUCHEN_RATE_LIMITER_SWEEP_SECONDS:-60}"
+      MOUCHEN_EVENT_RATE_WINDOW_SECONDS: "${MOUCHEN_EVENT_RATE_WINDOW_SECONDS:-60}"
+      MOUCHEN_EVENT_INGESTS_PER_WINDOW: "${MOUCHEN_EVENT_INGESTS_PER_WINDOW:-240}"
+      MOUCHEN_EVENT_STORAGE_BYTES_PER_USER: "${MOUCHEN_EVENT_STORAGE_BYTES_PER_USER:-104857600}"
+      MOUCHEN_MAX_GOALS_PER_USER: "${MOUCHEN_MAX_GOALS_PER_USER:-200}"
+      MOUCHEN_MAX_GOAL_TARGET_BYTES: "${MOUCHEN_MAX_GOAL_TARGET_BYTES:-16384}"
+      MOUCHEN_MAX_CHARTERS_PER_USER: "${MOUCHEN_MAX_CHARTERS_PER_USER:-50}"
+      MOUCHEN_MAX_FEEDBACK_PER_USER: "${MOUCHEN_MAX_FEEDBACK_PER_USER:-10000}"
+      MOUCHEN_MAX_GUIDANCE_PER_ADVICE: "${MOUCHEN_MAX_GUIDANCE_PER_ADVICE:-20}"
+      MOUCHEN_DEMO_SEED_ENABLED: "${MOUCHEN_DEMO_SEED_ENABLED:-false}"
+      MOUCHEN_AUTH_FAILURE_RETENTION_HOURS: "${MOUCHEN_AUTH_FAILURE_RETENTION_HOURS:-24}"
+      MOUCHEN_AUTH_FAILURE_MAX_ROWS: "${MOUCHEN_AUTH_FAILURE_MAX_ROWS:-100000}"
+      MOUCHEN_AUTH_ACTIVE_DEVICES_PER_USER: "${MOUCHEN_AUTH_ACTIVE_DEVICES_PER_USER:-20}"
+      MOUCHEN_AUTH_TOKEN_HISTORY_PER_USER: "${MOUCHEN_AUTH_TOKEN_HISTORY_PER_USER:-200}"
+      MOUCHEN_MAX_DEVICES_PER_USER: "${MOUCHEN_MAX_DEVICES_PER_USER:-50}"
+      MOUCHEN_CLOUD_AUDIT_RETENTION_DAYS: "${MOUCHEN_CLOUD_AUDIT_RETENTION_DAYS:-30}"
+      MOUCHEN_CLOUD_AUDIT_BYTES_PER_USER: "${MOUCHEN_CLOUD_AUDIT_BYTES_PER_USER:-20971520}"
+      OPENAI_API_KEY_FILE: /run/secrets/openai_api_key
+      # Required only during the bounded legacy-owner claim window. Fresh
+      # commercial installs must leave it blank so the first account UUID is
+      # not mistaken for a conflicting historical tenant after restart.
+      MOUCHEN_SINGLE_USER_ID: "${MOUCHEN_SINGLE_USER_ID:-}"
+      MOUCHEN_LEGACY_USERNAMES_JSON: "${MOUCHEN_LEGACY_USERNAMES_JSON:-}"
+      MOUCHEN_ALLOW_UNAUTHENTICATED_PRIVATE_ALPHA: "false"
+      MOUCHEN_ALLOW_RAW_CLOUD: "${MOUCHEN_ALLOW_RAW_CLOUD:-false}"
+      MOUCHEN_ANALYSIS_BACKGROUND_ENABLED: "${MOUCHEN_ANALYSIS_BACKGROUND_ENABLED:-true}"
+      MOUCHEN_ANALYSIS_BACKGROUND_BATCH_SIZE: "${MOUCHEN_ANALYSIS_BACKGROUND_BATCH_SIZE:-1}"
+      MOUCHEN_ANALYSIS_MODEL_CALLS_PER_HOUR: "${MOUCHEN_ANALYSIS_MODEL_CALLS_PER_HOUR:-12}"
+      MOUCHEN_ANALYSIS_MODEL_CALLS_PER_DAY: "${MOUCHEN_ANALYSIS_MODEL_CALLS_PER_DAY:-60}"
+      MOUCHEN_GLOBAL_MODEL_CALLS_PER_HOUR: "${MOUCHEN_GLOBAL_MODEL_CALLS_PER_HOUR:-120}"
+      MOUCHEN_GLOBAL_MODEL_CALLS_PER_DAY: "${MOUCHEN_GLOBAL_MODEL_CALLS_PER_DAY:-600}"
+      MOUCHEN_DIRECT_MODEL_RATE_WINDOW_SECONDS: "${MOUCHEN_DIRECT_MODEL_RATE_WINDOW_SECONDS:-60}"
+      MOUCHEN_DIRECT_MODEL_REQUESTS_PER_WINDOW: "${MOUCHEN_DIRECT_MODEL_REQUESTS_PER_WINDOW:-10}"
+      MOUCHEN_DIRECT_MODEL_USER_CONCURRENCY: "${MOUCHEN_DIRECT_MODEL_USER_CONCURRENCY:-1}"
+      MOUCHEN_DIRECT_MODEL_GLOBAL_CONCURRENCY: "${MOUCHEN_DIRECT_MODEL_GLOBAL_CONCURRENCY:-4}"
+      MOUCHEN_DIRECT_MODEL_LEASE_SECONDS: "${MOUCHEN_DIRECT_MODEL_LEASE_SECONDS:-600}"
+      MOUCHEN_COMMERCIAL_MULTI_USER: "${MOUCHEN_COMMERCIAL_MULTI_USER:-true}"
+      MOUCHEN_MODEL_MAX_OUTPUT_TOKENS: "${MOUCHEN_MODEL_MAX_OUTPUT_TOKENS:-2048}"
+      MOUCHEN_LIVE_ANALYSIS_MAX_EVENT_AGE_SECONDS: "${MOUCHEN_LIVE_ANALYSIS_MAX_EVENT_AGE_SECONDS:-900}"
+      MOUCHEN_CLAUDE_REVIEW_PROVIDER: ${MOUCHEN_CLAUDE_REVIEW_PROVIDER:-disabled}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
+      OPENAI_API_STYLE: ${OPENAI_API_STYLE:-responses}
+      OPENAI_ROUTINE_MODEL: ${OPENAI_ROUTINE_MODEL:-gpt-5.6-terra}
+      OPENAI_COMPLEX_MODEL: ${OPENAI_COMPLEX_MODEL:-gpt-5.6-sol}
+      OPENAI_SECOND_OPINION_MODEL: ${OPENAI_SECOND_OPINION_MODEL:-gpt-5.6-sol}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://127.0.0.1:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:8b}
+      MOUCHEN_LOCAL_STT_ENABLED: "${MOUCHEN_LOCAL_STT_ENABLED:-false}"
+      MOUCHEN_LOCAL_STT_SERVER_URL: "${MOUCHEN_LOCAL_STT_SERVER_URL:-http://stt:8080/inference}"
+      MOUCHEN_LOCAL_STT_ENGINE: "${MOUCHEN_LOCAL_STT_ENGINE:-local-paraformer-sherpa-onnx}"
+      MOUCHEN_LOCAL_STT_FFMPEG: "${MOUCHEN_LOCAL_STT_FFMPEG:-/opt/mouchen-stt/bin/ffmpeg}"
+      MOUCHEN_LOCAL_STT_MODEL: "${MOUCHEN_LOCAL_STT_MODEL:-/opt/mouchen-stt/models/paraformer/model.int8.onnx}"
+      MOUCHEN_LOCAL_STT_MODEL_SHA256: "${MOUCHEN_LOCAL_STT_MODEL_SHA256:-f36a0433bcf096bd6d6f11b80a3ac8bed110bdca632fe0d731df8d1a84475945}"
+      MOUCHEN_LOCAL_STT_MODEL_SIZE: "${MOUCHEN_LOCAL_STT_MODEL_SIZE:-243371218}"
+      MOUCHEN_LOCAL_STT_TIMEOUT_SECONDS: "${MOUCHEN_LOCAL_STT_TIMEOUT_SECONDS:-15}"
+      MOUCHEN_LOCAL_STT_THREADS: "${MOUCHEN_LOCAL_STT_THREADS:-4}"
+      MOUCHEN_LOCAL_STT_USE_GPU: "false"
+      MOUCHEN_STT_RATE_WINDOW_SECONDS: "${MOUCHEN_STT_RATE_WINDOW_SECONDS:-300}"
+      MOUCHEN_STT_REQUESTS_PER_WINDOW: "${MOUCHEN_STT_REQUESTS_PER_WINDOW:-10}"
+      MOUCHEN_STT_USER_CONCURRENCY: "${MOUCHEN_STT_USER_CONCURRENCY:-1}"
+      MOUCHEN_STT_GLOBAL_CONCURRENCY: "${MOUCHEN_STT_GLOBAL_CONCURRENCY:-2}"
+      MOUCHEN_STT_LEASE_SECONDS: "${MOUCHEN_STT_LEASE_SECONDS:-60}"
+      MOUCHEN_STT_BODY_READ_TIMEOUT_SECONDS: "${MOUCHEN_STT_BODY_READ_TIMEOUT_SECONDS:-30}"
+      MOUCHEN_ACCOUNT_EXPORT_TEMP_DIR: "${MOUCHEN_ACCOUNT_EXPORT_TEMP_DIR:-/data/.account-exports}"
+      MOUCHEN_ACCOUNT_EXPORT_MAX_BYTES: "${MOUCHEN_ACCOUNT_EXPORT_MAX_BYTES:-268435456}"
+      MOUCHEN_ACCOUNT_EXPORT_COOLDOWN_SECONDS: "${MOUCHEN_ACCOUNT_EXPORT_COOLDOWN_SECONDS:-300}"
+      MOUCHEN_ACCOUNT_EXPORT_LEASE_SECONDS: "${MOUCHEN_ACCOUNT_EXPORT_LEASE_SECONDS:-3600}"
+      MOUCHEN_ACCOUNT_STEP_UP_ATTEMPTS_PER_WINDOW: "${MOUCHEN_ACCOUNT_STEP_UP_ATTEMPTS_PER_WINDOW:-5}"
+      MOUCHEN_ACCOUNT_STEP_UP_SOURCE_ATTEMPTS_PER_WINDOW: "${MOUCHEN_ACCOUNT_STEP_UP_SOURCE_ATTEMPTS_PER_WINDOW:-25}"
+      MOUCHEN_ACCOUNT_STEP_UP_WINDOW_SECONDS: "${MOUCHEN_ACCOUNT_STEP_UP_WINDOW_SECONDS:-900}"
+    ports:
+      - "127.0.0.1:${MOUCHEN_BIND_PORT:-8788}:8788"
+    volumes:
+      - mouchen_data:/data
+    secrets:
+      # Local Compose uses bind-mounted files and cannot remap uid/gid/mode.
+      # scripts/init-secrets.sh therefore creates host files as 10001:10001,
+      # mode 0400, so this non-root process can read them without broadening access.
+      - source: mouchen_api_token
+        target: mouchen_api_token
+      - source: openai_api_key
+        target: openai_api_key
+      - source: mouchen_registration_code
+        target: mouchen_registration_code
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=64m,uid=10001,gid=10001,mode=1700
+    networks:
+      - default
+      - stt_internal
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8788/ready', timeout=2).read()"
+      interval: 15s
+      timeout: 3s
+      start_period: 20s
+      retries: 4
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  stt:
+    image: ${MOUCHEN_IMAGE:-mouchen-backend:private-alpha}
+    init: true
+    restart: unless-stopped
+    user: "10001:10001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: ${MOUCHEN_STT_MEMORY_LIMIT:-1536m}
+    cpus: ${MOUCHEN_STT_CPUS:-4.0}
+    stop_grace_period: 30s
+    command:
+      - python
+      - -m
+      - uvicorn
+      - app.paraformer_server:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8080"
+      - --workers
+      - "1"
+      - --no-access-log
+      - --no-proxy-headers
+    environment:
+      MOUCHEN_PARAFORMER_MODEL: "${MOUCHEN_LOCAL_STT_MODEL:-/opt/mouchen-stt/models/paraformer/model.int8.onnx}"
+      MOUCHEN_PARAFORMER_TOKENS: "${MOUCHEN_PARAFORMER_TOKENS:-/opt/mouchen-stt/models/paraformer/tokens.txt}"
+      MOUCHEN_PARAFORMER_THREADS: "${MOUCHEN_LOCAL_STT_THREADS:-4}"
+      MOUCHEN_PARAFORMER_QUEUE_WAIT_SECONDS: "${MOUCHEN_PARAFORMER_QUEUE_WAIT_SECONDS:-2}"
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m,uid=10001,gid=10001,mode=1700
+    networks:
+      - stt_internal
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=2).read()"
+      interval: 10s
+      timeout: 3s
+      start_period: 30s
+      retries: 4
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+volumes:
+  mouchen_data:
+
+networks:
+  stt_internal:
+    internal: true
+
+secrets:
+  mouchen_api_token:
+    file: ./secrets/mouchen_api_token
+  openai_api_key:
+    file: ./secrets/openai_api_key
+  mouchen_registration_code:
+    file: ./secrets/mouchen_registration_code

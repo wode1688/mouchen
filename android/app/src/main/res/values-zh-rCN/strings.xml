@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AI替身</string>
+    <string name="notification_access_label">AI替身通知事件</string>
+    <string name="accessibility_label">AI替身可见内容采集</string>
+    <string name="ime_label">AI替身输入法</string>
+    <string name="capture_channel">本地感知服务</string>
+    <string name="capture_active">本地采集正在运行</string>
+</resources>

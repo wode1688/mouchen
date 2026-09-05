@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_access_label">My AI Twin notification events</string>
+    <string name="accessibility_label">My AI Twin visible content collection</string>
+    <string name="ime_label">My AI Twin keyboard</string>
+    <string name="capture_channel">Local sensing service</string>
+    <string name="capture_active">Local collection is running</string>
+</resources>

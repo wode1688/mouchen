@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#173b35">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="AI替身：主动理解局势、发现问题并给出可执行建议。">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AI替身">
+  <link rel="manifest" href="/static/manifest.webmanifest">
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/static/icon.svg">
+  <link rel="stylesheet" href="/static/app.css">
+  <title>AI替身</title>
+</head>
+<body>
+  <noscript>AI替身网页版需要启用 JavaScript。</noscript>
+
+  <main id="authScreen" class="auth-shell" aria-labelledby="authTitle">
+    <section class="auth-hero">
+      <a class="brand brand-on-dark" href="/static/index.html" aria-label="AI替身首页">
+        <span class="brand-mark" aria-hidden="true">谋</span>
+        <span><strong>AI替身</strong><small>主动发现，审慎建言</small></span>
+      </a>
+      <div class="hero-copy">
+        <p class="eyebrow">你的个人 AI 幕僚</p>
+        <h1 id="authTitle">重要的事，<br>不必等你想起来。</h1>
+        <p>AI替身会结合你的目标和授权信息，主动发现偏差、风险与机会，并给出第一步行动。</p>
+      </div>
+      <ul class="privacy-points" aria-label="隐私原则">
+        <li>每个账号的数据相互隔离</li>
+        <li>云分析与完整原文传输默认关闭</li>
+        <li>建议不会未经确认代你执行</li>
+      </ul>
+    </section>
+
+    <section class="auth-card" aria-live="polite">
+      <div class="language-picker auth-language-picker">
+        <label for="authLanguageSelect">语言 / Language</label>
+        <select id="authLanguageSelect" aria-label="选择语言">
+          <option value="zh-CN">中文（简体）</option>
+          <option value="en-US">English</option>
+        </select>
+      </div>
+      <div class="auth-tabs" role="tablist" aria-label="账号操作">
+        <button id="loginTab" class="auth-tab active" type="button" role="tab" aria-selected="true" aria-controls="loginPanel">登录</button>
+        <button id="registerTab" class="auth-tab" type="button" role="tab" aria-selected="false" aria-controls="registerPanel">邀请码注册</button>
+      </div>
+
+      <form id="loginForm" class="auth-form" autocomplete="on">
+        <div class="form-heading">
+          <h2>欢迎回来</h2>
+          <p>登录后可查看与你账号绑定的目标和建言。</p>
+        </div>
+        <label>用户名
+          <input id="loginUsername" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" minlength="3" maxlength="64" required>
+        </label>
+        <label>密码
+          <span class="password-field">
+            <input id="loginPassword" name="password" type="password" autocomplete="current-password" minlength="10" maxlength="1024" required>
+            <button class="reveal-button" type="button" data-reveal="loginPassword" aria-label="显示密码">显示</button>
+          </span>
+        </label>
+        <button id="loginSubmit" class="button primary wide" type="submit">登录AI替身</button>
+      </form>
+
+      <form id="registerForm" class="auth-form" autocomplete="on" hidden>
+        <div class="form-heading">
+          <h2>创建账号</h2>
+          <p>注册需要管理员发放的一次性邀请码。</p>
+        </div>
+        <label>用户名
+          <input id="registerUsername" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" minlength="3" maxlength="64" required>
+          <small>3–64 个字符，不能包含空格。</small>
+        </label>
+        <label>密码
+          <span class="password-field">
+            <input id="registerPassword" name="new-password" type="password" autocomplete="new-password" minlength="10" maxlength="1024" required>
+            <button class="reveal-button" type="button" data-reveal="registerPassword" aria-label="显示密码">显示</button>
+          </span>
+          <small>至少 10 个字符，请使用独立密码。</small>
+        </label>
+        <label>确认密码
+          <input id="registerPasswordConfirm" name="new-password-confirm" type="password" autocomplete="new-password" minlength="10" maxlength="1024" required>
+        </label>
+        <label>邀请码
+          <input id="registrationCode" name="registration-code" type="text" autocomplete="one-time-code" autocapitalize="none" spellcheck="false" maxlength="512" required>
+        </label>
+        <button id="registerSubmit" class="button primary wide" type="submit">注册并登录</button>
+      </form>
+
+      <p id="authMessage" class="form-message" role="alert" hidden></p>
+      <p class="session-note">为保护账号，本网页关闭后需要重新登录。访问令牌只保存在当前浏览器会话中。</p>
+    </section>
+  </main>
+
+  <div id="appScreen" class="app-shell" hidden>
+    <aside class="sidebar">
+      <a class="brand brand-on-dark" href="/static/index.html#overview" aria-label="AI替身总览">
+        <span class="brand-mark" aria-hidden="true">谋</span>
+        <span><strong>AI替身</strong><small>个人局势台</small></span>
+      </a>
+      <nav class="main-nav" aria-label="主导航">
+        <button type="button" data-view="overview"><span aria-hidden="true">总</span>总览</button>
+        <button type="button" data-view="advice"><span aria-hidden="true">言</span>建言</button>
+        <button type="button" data-view="goals"><span aria-hidden="true">标</span>目标</button>
+        <button type="button" data-view="settings"><span aria-hidden="true">设</span>设置</button>
+      </nav>
+      <div class="sidebar-status">
+        <span id="systemDot" class="status-dot"></span>
+        <span id="systemState">正在连接</span>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">AI替身 · 个人工作台</p>
+          <h1 id="pageTitle">总览</h1>
+        </div>
+        <div class="account-menu">
+          <div class="account-copy">
+            <strong id="accountName">—</strong>
+            <small id="sessionExpiry">会话校验中</small>
+          </div>
+          <button id="refreshButton" class="button ghost" type="button">刷新</button>
+          <button id="logoutButton" class="button quiet" type="button">退出</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="view" data-view-panel="overview">
+          <div class="metric-grid">
+            <article class="metric-card"><span>待处理建言</span><strong id="activeAdviceCount">0</strong><small>需要你决定的建议</small></article>
+            <article class="metric-card"><span>重要提醒</span><strong id="immediateAdviceCount">0</strong><small>即时送达的建言</small></article>
+            <article class="metric-card"><span>目标坐标</span><strong id="goalCount">0</strong><small>AI替身判断的依据</small></article>
+            <article class="metric-card"><span>服务状态</span><strong id="healthText" class="health-value">检查中</strong><small id="modelProvider">模型通道检查中</small></article>
+          </div>
+
+          <section class="section-block">
+            <div class="section-heading">
+              <div><p class="eyebrow">当前最值得关注</p><h2>AI替身的判断</h2></div>
+              <button id="reviewNowButton" class="button secondary" type="button">立即复盘</button>
+            </div>
+            <div id="overviewAdvice" class="card-list"><div class="empty-state">正在读取局势……</div></div>
+          </section>
+
+          <section class="section-block">
+            <div class="section-heading"><div><p class="eyebrow">目标坐标</p><h2>你的原话</h2></div></div>
+            <div id="overviewGoals" class="goal-grid"><div class="empty-state">尚未建立目标</div></div>
+          </section>
+        </section>
+
+        <section class="view" data-view-panel="advice" hidden>
+          <div class="section-heading">
+            <div><p class="eyebrow">证据 · 动作 · 结果</p><h2>全部建言</h2></div>
+            <label class="compact-field">筛选
+              <select id="adviceFilter">
+                <option value="all">全部</option>
+                <option value="active">待处理</option>
+                <option value="adopted">已采纳</option>
+                <option value="dismissed">已结束</option>
+              </select>
+            </label>
+          </div>
+          <div id="adviceLedger" class="advice-ledger"><div class="empty-state">正在读取建言……</div></div>
+        </section>
+
+        <section class="view" data-view-panel="goals" hidden>
+          <div class="two-column">
+            <section>
+              <div class="section-heading"><div><p class="eyebrow">现行坐标</p><h2>目标版本</h2></div></div>
+              <div id="goalLedger" class="goal-list"><div class="empty-state">尚未建立目标</div></div>
+            </section>
+            <section class="form-panel">
+              <div class="section-heading"><div><p class="eyebrow">录入你的原话</p><h2>新增目标</h2></div></div>
+              <form id="goalForm">
+                <label>目标名称<input id="goalTitle" type="text" maxlength="200" required placeholder="例如：完成第一个企业 AI 付费试点"></label>
+                <label>领域<input id="goalDomain" type="text" maxlength="80" required placeholder="例如：事业"></label>
+                <label>你的原话<textarea id="goalQuote" maxlength="4000" required placeholder="写下你判断成功与否的标准。AI替身只依据你的目标纠偏。"></textarea></label>
+                <label>每周计划投入（小时）<input id="goalHours" type="number" min="0" max="168" step="0.5" inputmode="decimal" placeholder="可选"></label>
+                <button class="button primary" type="submit">保存目标版本</button>
+              </form>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="settings" hidden>
+          <div class="settings-grid">
+            <section class="settings-card consent-card">
+              <p class="eyebrow">本次浏览器会话</p>
+              <h2>AI 与数据授权</h2>
+              <p class="settings-intro">两个开关默认关闭。开启前请确认你理解相应数据会被发送给服务器配置的模型服务商。</p>
+
+              <label class="toggle-row" for="cloudAnalysisConsent">
+                <span><strong>允许云模型分析</strong><small>发送完成分析所需的最小上下文。关闭时，网页不会主动批准云分析。</small></span>
+                <span class="switch"><input id="cloudAnalysisConsent" type="checkbox"><i aria-hidden="true"></i></span>
+              </label>
+              <div id="cloudConsentNotice" class="consent-notice" hidden>
+                <strong>开启云分析前请确认</strong>
+                <p>相关任务片段会离开当前设备，并由服务器配置的模型服务商处理。请勿发送无权共享的他人信息。</p>
+                <div class="dialog-actions">
+                  <button id="cancelCloudConsent" class="button quiet" type="button">取消</button>
+                  <button id="confirmCloudConsent" class="button primary" type="button">我理解并同意</button>
+                </div>
+              </div>
+
+              <label class="toggle-row disabled" id="rawContextRow" for="rawContextConsent">
+                <span><strong>允许发送完整原始上下文</strong><small>可能包括未脱敏的屏幕、输入、语音或对话原文。风险更高，仅在确有需要时开启。</small></span>
+                <span class="switch"><input id="rawContextConsent" type="checkbox" disabled><i aria-hidden="true"></i></span>
+              </label>
+              <div id="rawConsentNotice" class="consent-notice danger" hidden>
+                <strong>这是高敏感授权</strong>
+                <p>完整原文可能包含身份、账号、通信对象和商业信息。发送后无法通过本设备撤回第三方已经接收的数据。</p>
+                <label class="confirm-line"><input id="rawConsentAcknowledge" type="checkbox">我确认内容属于我，或我有权发送，并接受完整原文离开设备。</label>
+                <div class="dialog-actions">
+                  <button id="cancelRawConsent" class="button quiet" type="button">取消</button>
+                  <button id="confirmRawConsent" class="button danger-button" type="button" disabled>确认开启</button>
+                </div>
+              </div>
+              <p class="session-consent-note">授权只保留在当前浏览器标签会话；关闭页面后自动恢复为关闭。</p>
+            </section>
+
+            <section class="settings-card">
+              <p class="eyebrow">账号</p>
+              <h2>当前会话</h2>
+              <label class="language-picker settings-language-picker" for="accountLanguageSelect">
+                <span><strong>界面与建言语言</strong><small>此设置属于账号，并会同步到其他设备。已有建言和证据原文不会被机械翻译。</small></span>
+                <select id="accountLanguageSelect" aria-label="界面与建言语言">
+                  <option value="zh-CN">中文（简体）</option>
+                  <option value="en-US">English</option>
+                </select>
+              </label>
+              <dl class="session-details">
+                <div><dt>用户名</dt><dd id="settingsUsername">—</dd></div>
+                <div><dt>设备</dt><dd id="settingsDevice">—</dd></div>
+                <div><dt>有效期</dt><dd id="settingsExpiry">—</dd></div>
+              </dl>
+              <p class="settings-intro">访问令牌不会写入本地长期存储，也不会被 Service Worker 缓存。</p>
+              <button id="settingsLogoutButton" class="button secondary" type="button">退出当前账号</button>
+            </section>
+
+            <section class="settings-card account-tools-card">
+              <p class="eyebrow">账号安全</p>
+              <h2>密码与个人数据</h2>
+              <p class="settings-intro">修改密码会撤销其他设备的旧会话。导出文件只在本次操作中生成，不会被网页离线缓存。</p>
+              <form id="changePasswordForm" class="account-tool-form">
+                <label>当前密码<input id="currentPassword" type="password" autocomplete="current-password" maxlength="1024" required></label>
+                <label>新密码<input id="newPassword" type="password" autocomplete="new-password" minlength="10" maxlength="1024" required></label>
+                <label>再次输入新密码<input id="newPasswordConfirm" type="password" autocomplete="new-password" minlength="10" maxlength="1024" required></label>
+                <button id="changePasswordButton" class="button secondary" type="submit">修改密码并撤销旧会话</button>
+              </form>
+              <div class="account-export-row">
+                <div><strong>导出个人数据</strong><small>下载目标、事件、建言、反馈和出云审计，不含密码或访问令牌。</small></div>
+                <div class="account-export-action">
+                  <label>当前密码<input id="exportAccountPassword" type="password" autocomplete="current-password" maxlength="1024" required></label>
+                  <button id="exportAccountButton" class="button secondary" type="button">验证并下载</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="settings-card danger-zone">
+              <p class="eyebrow">危险操作</p>
+              <h2>永久删除账号</h2>
+              <p class="settings-intro">删除会撤销所有设备会话，并级联删除服务器中属于此账号的数据。此操作无法撤销。</p>
+              <form id="deleteAccountForm" class="account-tool-form">
+                <label>再次输入当前密码<input id="deleteAccountPassword" type="password" autocomplete="current-password" maxlength="1024" required></label>
+                <label class="confirm-line"><input id="deleteAccountConfirm" type="checkbox" required>我确认永久删除账号和服务器中的个人数据。</label>
+                <button id="deleteAccountButton" class="button danger-button" type="submit">永久删除账号</button>
+              </form>
+            </section>
+
+            <section class="settings-card">
+              <p class="eyebrow">能力边界</p>
+              <h2>AI替身不会做什么</h2>
+              <ul id="boundaryList" class="boundary-list"><li>正在读取能力声明……</li></ul>
+            </section>
+
+            <section class="settings-card install-card">
+              <p class="eyebrow">iPhone 使用</p>
+              <h2>添加到主屏幕</h2>
+              <ol>
+                <li>在 Safari 中打开本页面。</li>
+                <li>点击底部“分享”。</li>
+                <li>选择“添加到主屏幕”。</li>
+              </ol>
+              <p class="settings-intro">安装后以独立窗口运行；账号数据仍从服务器读取，不会写入离线缓存。</p>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="guidanceDialog" class="modal">
+    <form id="guidanceForm" method="dialog">
+      <p class="eyebrow">纠正AI替身的方向</p>
+      <h2>你希望以后怎么建议？</h2>
+      <p>这段话会作为建言反馈保存，请不要填写密码或验证码。</p>
+      <textarea id="guidanceText" maxlength="2000" required placeholder="例如：这类事情只在影响企业 AI 业务时提醒我。"></textarea>
+      <div class="dialog-actions">
+        <button id="cancelGuidance" class="button quiet" type="button">取消</button>
+        <button class="button primary" type="submit">发送方向</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

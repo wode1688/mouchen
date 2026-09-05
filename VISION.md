@@ -160,7 +160,7 @@ AI替身不是隐形监控软件，不是复制人格或冒充用户的数字克
 
 ## English summary
 
-AI替身 — Your Personal AI Delegate — is not intended to become a more conversational chatbot. It aims to become a user-controlled personal AI layer that notices meaningful gaps between goals and reality, provides evidence-backed advice at the right moment, prepares bounded actions, and learns from verified outcomes.
+AI替身 — My AI Twin — is not intended to become a more conversational chatbot. It aims to become a user-controlled personal AI layer that notices meaningful gaps between goals and reality, provides evidence-backed advice at the right moment, prepares bounded actions, and learns from verified outcomes.
 
 Its intended final form combines user-owned portable memory, a permissioned and minimal personal situation model, proactive but interruption-aware judgment, graduated autonomy with human confirmation for consequential actions, learning from outcomes instead of engagement, and one consistent ledger across devices and model providers.
 

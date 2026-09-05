@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "My AI Twin";
+"NSCalendarsFullAccessUsageDescription" = "My AI Twin reads calendars you authorize to identify scheduling conflicts, slipping commitments, and goal allocation gaps.";
+"NSCalendarsUsageDescription" = "My AI Twin reads calendars you authorize to identify scheduling conflicts and goal allocation gaps.";
+"NSContactsUsageDescription" = "My AI Twin reads contacts only when you request a snapshot, to build your private relationship context.";
+"NSLocationWhenInUseUsageDescription" = "My AI Twin gets your location once, only when requested, to understand commute and situational context.";

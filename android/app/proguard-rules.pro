@@ -1,0 +1,3 @@
+-keep class net.zetetic.** { *; }
+-keep class com.sun.mail.** { *; }
+-dontwarn javax.activation.**

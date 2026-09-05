@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleDisplayName</key>
+    <string>My AI Twin</string>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>$(MARKETING_VERSION)</string>
+    <key>CFBundleVersion</key>
+    <string>$(CURRENT_PROJECT_VERSION)</string>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    <key>UILaunchScreen</key>
+    <dict/>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>NSCalendarsFullAccessUsageDescription</key>
+    <string>My AI Twin reads calendars you authorize to identify scheduling conflicts, slipping commitments, and goal allocation gaps.</string>
+    <key>NSCalendarsUsageDescription</key>
+    <string>My AI Twin reads calendars you authorize to identify scheduling conflicts and goal allocation gaps.</string>
+    <key>NSContactsUsageDescription</key>
+    <string>My AI Twin reads contacts only when you request a snapshot, to build your private relationship context.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>My AI Twin gets your location once, only when requested, to understand commute and situational context.</string>
+    <key>BGTaskSchedulerPermittedIdentifiers</key>
+    <array>
+        <string>com.mouchen.ios.refresh</string>
+    </array>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+    </array>
+    <key>MouchenDefaultServerURL</key>
+    <string>https://example.invalid</string>
+</dict>
+</plist>

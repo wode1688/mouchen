@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="capture_channel_description">Shows user-authorized audio or screen collection</string>
+    <string name="capture_stop">Stop</string>
+    <string name="audio_capture_title">My AI Twin is recording audio</string>
+    <string name="audio_capture_text">Audio is encrypted in segments on the phone; upload follows the transcription settings explicitly saved in Connections</string>
+    <string name="screen_capture_title">My AI Twin is reading the screen</string>
+    <string name="screen_capture_text">Screenshots are encrypted on the phone and text is recognized on-device; tap Stop to end at any time</string>
+</resources>

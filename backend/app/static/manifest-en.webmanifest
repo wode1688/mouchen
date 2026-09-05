@@ -1,0 +1,21 @@
+{
+  "name": "My AI Twin · Personal AI Chief of Staff",
+  "short_name": "My AI Twin",
+  "description": "Proactively understands your situation, finds important problems, and suggests a clear next step.",
+  "lang": "en-US",
+  "start_url": "/static/index.html",
+  "scope": "/static/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f3f0e8",
+  "theme_color": "#173b35",
+  "categories": ["productivity", "business"],
+  "icons": [
+    {
+      "src": "/static/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

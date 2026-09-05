@@ -266,12 +266,19 @@ def test_direct_user_statement_can_trigger_deterministic_advice():
     assert detect_problem(event, _goal(), 0.9) is not None
 
 
-def test_ai_delegate_brand_is_recognized_as_a_meta_goal():
+@pytest.mark.parametrize(
+    ("title", "quote"),
+    [
+        ("让 AI替身主动发现问题", "AI替身应该更了解我"),
+        ("Make My AI Twin proactive", "My AI Twin should understand me better"),
+    ],
+)
+def test_ai_delegate_brand_is_recognized_as_a_meta_goal(title: str, quote: str):
     meta_goal = Goal(
         user_id="u1",
         domain="general",
-        title="让 AI替身主动发现问题",
-        quote="AI替身应该更了解我",
+        title=title,
+        quote=quote,
     )
     concrete_goal = _goal()
 

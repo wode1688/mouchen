@@ -1,0 +1,21 @@
+{
+  "name": "AI替身 · 个人 AI 幕僚",
+  "short_name": "AI替身",
+  "description": "主动理解局势、发现问题并给出可执行建议。",
+  "lang": "zh-CN",
+  "start_url": "/static/index.html",
+  "scope": "/static/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f3f0e8",
+  "theme_color": "#173b35",
+  "categories": ["productivity", "business"],
+  "icons": [
+    {
+      "src": "/static/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

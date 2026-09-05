@@ -1,0 +1,9 @@
+*
+!backend/
+!backend/Dockerfile
+!backend/requirements.txt
+!backend/app/
+!backend/app/**
+backend/app/**/__pycache__/
+backend/app/**/*.py[cod]
+backend/app/static/**/*.map

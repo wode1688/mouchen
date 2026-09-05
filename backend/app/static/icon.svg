@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="AI替身">
+  <rect width="512" height="512" rx="112" fill="#173b35"/>
+  <path d="M104 110h304v292H104z" fill="#f6f1e7" opacity=".08"/>
+  <circle cx="256" cy="256" r="148" fill="none" stroke="#d5b56d" stroke-width="10"/>
+  <text x="256" y="326" text-anchor="middle" font-family="serif" font-size="210" font-weight="700" fill="#f6f1e7">谋</text>
+</svg>

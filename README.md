@@ -1,6 +1,6 @@
 # AI替身
 
-### Your Personal AI Delegate
+### My AI Twin
 
 ## 让每个人拥有一个真正站在自己一边的 AI替身
 
@@ -13,7 +13,7 @@
 **今天的切入点：** 为高负荷创业者和知识工作者提供可审计的主动私人参谋，先解决客户遗漏、现金流异常、时间偏航和关键承诺失约。<br>
 **长期的终局：** 成为每个人进入数字世界、调用 AI 与连接现实设备的默认入口。
 
-[理解这门生意](#它的上限不是工具而是个人-ai-入口) · [查看产品路径](#从创业者的-ai替身到个人-ai-基础设施) · [3 分钟体验公开核心](#3-分钟体验公开核心) · [参与 AI替身](#参与-ai替身)
+[理解这门生意](#它的上限不是工具而是个人-ai-入口) · [查看产品路径](#从创业者的-ai替身到个人-ai-基础设施) · [3 分钟体验](#3-分钟体验-ai替身) · [参与 AI替身](#参与-ai替身)
 
 ## 它的上限不是工具，而是个人 AI 入口
 
@@ -71,48 +71,54 @@ AI替身的方法论，来自创始人在高频广告运营中对自动决策、
 
 ## 产品今天做到哪一步
 
-完整产品正在受控私测，当前事实与本仓库的公开范围必须分开看：
+AI替身仍是工程 Alpha；本仓库现在公开 Android、Windows、iOS、完整后端、判断核心和部署工具的第一方源码。**源码完整公开不等于已经达到生产成熟度，也不代表所有设备和场景都完成了真实验证。**
 
-| 层级 | 私测产品现状 | 本仓是否开源 |
+| 层级 | 当前状态 | 本仓是否开源 |
 |---|---|---:|
-| Android | Android-first 私测客户端与授权信号链路 | 否 |
-| Windows | 桌面私测客户端与跨设备目标、建言、反馈链路 | 否 |
-| iOS | SwiftUI 源码验证中 | 否 |
+| Android | Android-first 私测客户端；含授权采集、同步、建言与确认式适配器 | **是** |
+| Windows | 桌面私测客户端；含本地加密、授权采集、跨设备目标与反馈链路 | **是** |
+| iOS | SwiftUI 客户端与 Share Extension；仍需在 macOS/Xcode 和真机继续验证 | **是** |
 | 判断核心 | 事件归一化、目标偏差、问题检测、评分与信任控制 | **是** |
 | 安全边界 | 同意、暂停、去重和会议/驾驶/睡眠等情境闸门 | **是** |
-| 开发验证 | JSON Schema、19 项测试、纯虚拟数据离线 Demo | **是** |
-| 完整服务端 | API、认证、存储、同步、模型路由与生产部署 | 否 |
-| 真实动作执行 | 消息、付款、账号修改等外部操作链路 | 否 |
+| 完整服务端 | API、认证、存储、同步、模型路由、Web 工作台与测试 | **是** |
+| 部署工具 | Docker 基线、邀请管理、备份/迁移/验证与本地 STT 工具 | **是** |
+| 高风险外部执行 | 仅有受限适配器与确认机制；消息、付款、账号修改等完整链路尚未实现 | 未实现的不宣称 |
+| 生产私密资产 | 密钥、Token、证书、签名、服务器地址、数据库、日志和真实用户数据 | **永不公开** |
 
 目前没有经过独立验证的规模化用户、留存、收入或付费数据。本项目不会把愿景、私测能力或验证目标写成已经取得的市场成绩。
 
 ## 本仓库到底公开了什么
 
-**我们先开源“AI替身如何判断、何时开口、何时闭嘴”，而不是采集私人数据的客户端和操作真实账号的执行层。**
+**本仓库公开当前产品的全部第一方代码，同时把生产秘密和真实个人数据留在仓库之外。**
 
 > 兼容性说明：仓库地址和部分内部标识暂时保留原项目代号 `Mouchen`，避免破坏现有链接、Schema 和历史数据；它不再作为产品名称。
 
 ~~~text
-backend/app/domain/   目标、证据、检测、评分、信任与安全闸门
-backend/tests/        19 项核心测试
+android/              Android 客户端、两种发行风味与测试
+desktop/              Windows 客户端、启动器、打包与测试
+ios/                  SwiftUI 客户端、分享扩展与契约测试
+backend/              API、认证、存储、分析、模型路由、Web UI 与测试
 shared/               事件与建言 JSON Schema
-examples/demo.py      不联网、只使用虚拟数据的演示
-docs/                 架构与内容归因规则
+deploy/               Docker、迁移、备份、邀请与验证脚本
+examples/demo.py      不联网、只使用虚拟数据的核心演示
+docs/                 架构、权限和能力边界
 ~~~
 
-当前公开能力包括：
+公开源码覆盖：
 
 - 将目标、事件、证据、预测、建言、反馈和结果表达为可检查的数据结构；
 - 识别时间投入偏差、承诺滑动、外部风险及六类高优先级问题信号；
 - 按证据价值、潜在收益、打扰成本和历史可信度决定是否应该开口；
 - 防止把网页、聊天或他人话语误认成用户本人事实；
-- 在未授权、暂停、重复提醒或不合适情境下延后或拦截建言。
+- 在未授权、暂停、重复提醒或不合适情境下延后或拦截建言；
+- Android、Windows 和 iOS 的授权入口、本地状态、同步与反馈实现；
+- 完整后端的账号、存储、分析队列、模型网关、Web 工作台和部署工具。
 
-没有公开的部分包括 Android、Windows、iOS 客户端，设备采集器，完整后端，账号认证，数据库，模型连接，跨设备同步，通知与动作执行，以及服务器、证书、密钥、真实数据和商业后台。这些部分涉及设备权限和生产安全，需要完成脱敏拆分与发布审查后再决定开放范围。
+未公开的是生产密码与 API Key、Token、Cookie、私有证书和签名材料、真实服务器地址、数据库、日志、聊天与个人数据、构建产物、私有仓库历史，以及未被本项目拥有的模型或服务。示例配置只含空值或占位地址。
 
-## 3 分钟体验公开核心
+## 3 分钟体验 AI替身
 
-下面运行的是跨平台 Python Demo，**不是 Windows、Android 或 iOS 客户端**。它不需要账号、API Key、数据库或网络，只使用虚拟数据。
+最快的入口仍是跨平台 Python Demo：不需要账号、API Key、数据库或网络，只使用虚拟数据。完整客户端和后端源码也在同一仓库中。
 
 Windows（Python 3.12+）：
 
@@ -123,9 +129,6 @@ cd mouchen
 python -m venv .venv
 .\.venv\Scripts\python -m pip install -r requirements.txt
 .\.venv\Scripts\python examples\demo.py
-
-cd backend
-..\.venv\Scripts\python -m pytest -q
 ~~~
 
 macOS / Linux：
@@ -137,12 +140,23 @@ cd mouchen
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 .venv/bin/python examples/demo.py
-
-cd backend
-../.venv/bin/python -m pytest -q
 ~~~
 
 Demo 会展示一条虚拟事件如何形成证据、触发建言、完成价值评分，再经过冷启动信任和上下文安全闸门。
+
+继续运行完整后端与 Windows 测试：
+
+~~~powershell
+.\.venv\Scripts\python -m pip install -r backend\requirements.txt
+Push-Location backend
+..\.venv\Scripts\python -m pytest -q
+Pop-Location
+Push-Location desktop
+..\.venv\Scripts\python -m pytest -q
+Pop-Location
+~~~
+
+Android 可用 Android Studio 打开 `android/`；Windows 入口与打包说明见 [`desktop/README.md`](desktop/README.md)；iOS 需在 macOS 上按 [`ios/README.md`](ios/README.md) 生成 Xcode 工程。公开配置默认不连接任何真实服务器，请从 `.env.example`、`backend/.env.example` 和 `deploy/env.example` 复制到本地私有配置后再填写自己的服务与密钥。
 
 ## 最终形态：由用户拥有的跨设备 AI替身
 
@@ -161,18 +175,20 @@ AI替身最终不是另一个聊天框，而是一套贯穿手机和电脑的个
 
 ## 开源许可
 
-公开代码采用 [Apache License 2.0](LICENSE)。名称、Logo、真实用户数据、私有测试服务、商业服务，以及未包含在本仓库中的代码或资产，不因本仓库开源而获得许可。
+本项目拥有的源码采用 [Apache License 2.0](LICENSE)。第三方依赖、模型和拼音词典继续遵循各自许可证；词典来源与 MIT 许可见其相邻 `NOTICE.txt`。名称、Logo、真实用户数据和商业服务不因源码开源而获得许可。
 
 ---
 
 ## English
 
-### AI替身 — Your Personal AI Delegate
+### AI替身 — My AI Twin
 
 **AI替身 is building the user-owned personal decision and action layer for the AI era.** Models and agents are becoming abundant; what remains scarce is an AI that continuously understands one person's goals, context, permissions and outcomes. AI替身 is designed to spot what matters before the user asks, provide evidence-backed judgment, and—with confirmation—coordinate models, services and devices until the real result is verified.
 
 The ambition is not a better reminder app. It is a personal intelligence layer between human intent and the digital world: starting with an auditable proactive strategist for high-load founders and knowledge workers, then expanding into a cross-device system and a trusted ecosystem for agents and services.
 
-The complete product is in controlled Alpha. Android, Windows and iOS client code is **not** included in this repository. This public Developer Preview contains only the provider-independent Python decision and safety core, JSON schemas, 19 tests, and an offline synthetic-data demo. It collects no device data, requires no account or API key, calls no model service, and performs no external action.
+The product remains an engineering Alpha, but this repository now includes the first-party source for the Android, Windows and iOS clients, the full backend and web workspace, the provider-independent decision and safety core, schemas, tests, deployment tools, and an offline synthetic-data demo. Publishing the source does not claim production readiness or real-device validation for every platform.
+
+Production passwords, API keys, tokens, certificates, signing material, server addresses, databases, logs, personal data, build artifacts and private Git history are intentionally excluded. Third-party dependencies and models remain under their own licenses.
 
 The user owns the goals, data and final decision. AI替身 observes, verifies, advises and reviews. See [VISION.md](VISION.md) for the intended final form and [CONTRIBUTING.md](CONTRIBUTING.md) to join.

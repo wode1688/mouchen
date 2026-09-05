@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="capture_channel_description">显示正在由用户授权运行的录音或屏幕采集</string>
+    <string name="capture_stop">停止</string>
+    <string name="audio_capture_title">AI替身正在录音</string>
+    <string name="audio_capture_text">录音在手机加密分段；是否上传取决于连接页中明确保存的转写设置</string>
+    <string name="screen_capture_title">AI替身正在读取屏幕</string>
+    <string name="screen_capture_text">截图在手机加密保存并本地识别文字；点按“停止”可随时结束</string>
+</resources>
