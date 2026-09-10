@@ -70,7 +70,7 @@ class OpenAICredentialProbe:
 _IS_WINDOWS = os.name == "nt"
 _DEFAULT_OPENAI_BASE_URL = "https://api.openai.com/v1"
 _OPENAI_API_STYLES = {"responses", "chat_completions"}
-_MODEL_PROVIDERS = {"auto", "openai", "codex_cli"}
+_MODEL_PROVIDERS = {"auto", "openai", "codex_cli", "rules"}
 _REVIEW_PROVIDERS = {"auto", "claude_code", "anthropic", "openai", "disabled"}
 _OPENAI_REQUEST_ID = re.compile(r"(?:req|request)[_-][A-Za-z0-9][A-Za-z0-9._:-]{0,119}")
 _OPENAI_QUOTA_MARKERS = {
@@ -876,6 +876,17 @@ def preferred_openai_provider() -> str:
     return "openai"
 
 
+def _require_models_enabled() -> None:
+    from .local_mode import rules_only
+
+    if rules_only():
+        raise ModelUnavailable(
+            "This local profile uses deterministic rules; model calls are disabled",
+            category="configuration", reason_code="local_rules_only",
+            retryable=False, provider="rules",
+        )
+
+
 def choose_route(
     level: AdviceLevel,
     force_private_7b: bool = False,
@@ -1003,6 +1014,7 @@ class ModelGateway:
         global_budget_reserved: bool = False,
         payload_prepared: bool = False,
     ) -> str:
+        _require_models_enabled()
         if route.provider == "template":
             if str(context.get("response_locale", "")).casefold() in {
                 "en",
@@ -1039,6 +1051,7 @@ class ModelGateway:
         global_budget_reserved: bool = False,
         payload_prepared: bool = False,
     ) -> str:
+        _require_models_enabled()
         raw_cloud_approved = bool(context.get("_raw_cloud_approved"))
         context = {
             key: value for key, value in context.items() if key != "_raw_cloud_approved"
