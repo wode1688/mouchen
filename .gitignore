@@ -62,3 +62,11 @@ ios/Config/Secrets.xcconfig
 *.iml
 .DS_Store
 Thumbs.db
+
+# Machine-local AI settings and session data
+AGENTS.override.md
+CLAUDE.local.md
+.claude/settings.local.json
+.hermes/
+.codex/auth.json
+.codex/sessions/

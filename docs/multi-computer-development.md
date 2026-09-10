@@ -2,6 +2,8 @@
 
 所有平台继续使用同一个仓库：`https://github.com/wode1688/mouchen`。Windows、Android、iOS、后端和临时中转分别在各自目录，修改通过 Git 提交记录保留。
 
+同时使用 Codex、Claude Code、Hermes 等工具时，请按 [多 AI 工具协作说明](multi-agent-development.md) 分配独立任务目录，并通过统一规则和任务记录交接。
+
 ## 第一次在电脑上使用
 
 ```powershell
