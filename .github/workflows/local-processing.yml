@@ -1,0 +1,36 @@
+name: Local processing checks
+
+on:
+  push:
+    paths:
+      - 'AI-Twin/backend/**'
+      - 'AI-Twin/desktop/**'
+      - '.github/workflows/local-processing.yml'
+  pull_request:
+    paths:
+      - 'AI-Twin/backend/**'
+      - 'AI-Twin/desktop/**'
+      - '.github/workflows/local-processing.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  backend-and-desktop:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Install business dependencies
+        run: python -m pip install -r AI-Twin/backend/requirements.txt
+      - name: Backend tests with synthetic data
+        working-directory: AI-Twin/backend
+        run: python -m pytest -q
+      - name: Native desktop tests with synthetic data
+        working-directory: AI-Twin/desktop
+        run: python -m pytest -q

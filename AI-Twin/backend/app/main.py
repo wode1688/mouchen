@@ -74,6 +74,8 @@ from .analysis_queue import (
 )
 from .context_retrieval import build_user_question_context
 from .config import SecretConfigurationError, secret_value
+from .local_mode import rules_only
+from .relay_import import RelayEnvelope, import_request
 from .domain.models import (
     AdviceLevel,
     ContextSnapshot,
@@ -146,7 +148,7 @@ async def lifespan(_: FastAPI):
     event_rate.reset()
     authenticated_requests.reset()
     authentication_hash_work.reset()
-    if _environment_flag("MOUCHEN_ANALYSIS_BACKGROUND_ENABLED", default=True):
+    if not rules_only() and _environment_flag("MOUCHEN_ANALYSIS_BACKGROUND_ENABLED", default=True):
         analysis_consumer = AnalysisQueueConsumer(
             repo,
             service,
@@ -969,6 +971,32 @@ def capabilities():
     }
 
 
+@app.post("/v1/relay/import")
+def relay_import(
+    request: Request,
+    body: RelayEnvelope,
+    principal: Annotated[AuthPrincipal, Depends(auth_principal)],
+):
+    if not rules_only() or not _is_direct_loopback(request):
+        raise HTTPException(403, "relay import requires a local rules profile")
+    if principal.auth_kind != "session":
+        raise HTTPException(403, "relay import requires account session authentication")
+    if body.operation == "event.create":
+        admission = event_rate.reserve(f"{id(repo)}:{principal.user_id}")
+        if not admission.allowed:
+            raise HTTPException(429, "event ingest rate exceeded",
+                                headers={"Retry-After": str(max(1, admission.retry_after))})
+    return import_request(
+        repo, service, principal.user_id, body,
+        enforce_goal_limits=_enforce_goal_limits, goal_count_limit=_goal_count_limit(),
+        max_facts_bytes=_bounded_environment_int("MOUCHEN_MAX_EVENT_FACTS_BYTES", 64 * 1024, 1024, 4 * 1024 * 1024),
+        max_feedback=_bounded_environment_int("MOUCHEN_MAX_FEEDBACK_PER_USER", 10_000, 100, 1_000_000),
+        max_guidance=_bounded_environment_int("MOUCHEN_MAX_GUIDANCE_PER_ADVICE", 20, 1, 1000),
+        event_is_live=_event_is_live_for_automatic_analysis,
+        analysis_preference_block=_automatic_analysis_preference_block,
+    )
+
+
 @app.post("/v1/goals", response_model=Goal)
 def create_goal(body: GoalCreate, uid: str = Depends(user_id)):
     _enforce_goal_limits(body, uid)
@@ -1089,6 +1117,8 @@ async def _ingest_event_unmetered(
     in_meeting: bool,
     quiet_hours: bool,
 ):
+    if rules_only():
+        proactive_cloud_approved = False
     if not _event_is_live_for_automatic_analysis(event):
         repo.insert_event(event)
         return EventIngestResponse(event=event, evaluation=None, queued=False)
@@ -1620,6 +1650,8 @@ async def analyze(
         bool, Header(alias="X-Raw-Cloud-Approved")
     ] = False,
 ):
+    if rules_only():
+        raise HTTPException(409, "this profile uses local rules; model calls are disabled")
     route = choose_route(body.level, body.force_private_7b, body.purpose)
     if route.provider not in {"template", "ollama"} and not body.outbound_approved:
         raise HTTPException(409, "cloud analysis requires outbound_approved=true")

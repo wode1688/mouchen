@@ -992,6 +992,13 @@ class Repository:
         self.auth_migration_reason: str | None = None
         with self._lock:
             self._connection.executescript(SCHEMA)
+            self._connection.execute(
+                """CREATE TABLE IF NOT EXISTS relay_receipts (
+                  user_id TEXT NOT NULL, message_id TEXT NOT NULL,
+                  request_hash TEXT NOT NULL, response_json TEXT NOT NULL,
+                  created_at TEXT NOT NULL, PRIMARY KEY(user_id,message_id)
+                )"""
+            )
             invite_columns = {
                 row["name"]
                 for row in self._connection.execute(
@@ -1189,6 +1196,42 @@ class Repository:
             self._ensure_attention_rows_locked(datetime.now(timezone.utc))
             self._install_retired_user_guards_locked()
             self._connection.commit()
+
+    def atomic_relay_request(self, user_id, message_id, request_hash, callback):
+        """Commit the business mutation and its replay receipt together."""
+        from .relay_import import RelayMessageConflict, RelayTransactionConnection
+
+        with self._lock:
+            connection = self._connection
+            try:
+                connection.execute("BEGIN IMMEDIATE")
+                self._assert_account_writable_locked(user_id)
+                previous = connection.execute(
+                    "SELECT request_hash,response_json FROM relay_receipts WHERE user_id=? AND message_id=?",
+                    (user_id, message_id),
+                ).fetchone()
+                if previous is not None:
+                    if previous["request_hash"] != request_hash:
+                        raise RelayMessageConflict("relay message conflict")
+                    response = json.loads(previous["response_json"])
+                    connection.commit()
+                    return response
+                connection.execute("SAVEPOINT relay_operation")
+                self._connection = RelayTransactionConnection(connection)
+                response = callback()
+                self._connection = connection
+                connection.execute(
+                    "INSERT INTO relay_receipts VALUES(?,?,?,?,?)",
+                    (user_id, message_id, request_hash,
+                     json.dumps(response, ensure_ascii=False, separators=(",", ":")), _now()),
+                )
+                connection.commit()
+                return response
+            except BaseException:
+                connection.rollback()
+                raise
+            finally:
+                self._connection = connection
 
     def _install_retired_user_guards_locked(self) -> None:
         """Guard every Repository write without burdening raw utility connections."""

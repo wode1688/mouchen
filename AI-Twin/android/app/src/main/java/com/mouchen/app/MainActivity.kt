@@ -1152,6 +1152,7 @@ private fun AuthenticationScreen(
     locale: String,
     onLocaleChange: (String) -> Unit,
 ) {
+    val localContext = LocalContext.current
     var mode by remember { mutableStateOf(AuthMode.LOGIN) }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -1171,6 +1172,9 @@ private fun AuthenticationScreen(
             ) {
                 LanguageToggle(locale, onLocaleChange, enabled = !busy)
                 Text("AI替身", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+                OutlinedButton(onClick = {
+                    localContext.startActivity(Intent(localContext, com.mouchen.app.relay.RelayActivity::class.java))
+                }) { Text("使用电脑本地处理") }
                 Text(
                     if (mode == AuthMode.LOGIN) "登录后继续了解你的局势" else "建立独立、加密的AI替身账号",
                     color = Color(0xFF68706C),

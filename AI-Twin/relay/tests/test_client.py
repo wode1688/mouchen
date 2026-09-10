@@ -131,6 +131,11 @@ class ClientTests(unittest.TestCase):
         self.assertEqual(json.loads(path.read_text(encoding="utf-8")), {"name": "示例"})
         self.assertEqual(list(path.parent.iterdir()), [path])
 
+    def test_pause_before_next_claim_leaves_file_in_cloud(self):
+        received = self.relay.pull(self.archive, should_stop=lambda: True)
+        self.assertEqual(received, [])
+        self.assertFalse(any(call[1].endswith('/claim') for call in self.relay.calls))
+
     def test_client_rejects_insecure_or_credential_bearing_urls(self):
         for url in (
             "http://relay.example.invalid",

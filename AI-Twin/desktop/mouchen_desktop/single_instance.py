@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ctypes
+import hashlib
 import os
 from collections.abc import Callable
 from ctypes import wintypes
@@ -14,11 +15,15 @@ MUTEX_NAME = "Local\\MouchenDesktopPrivateAlpha"
 class SingleInstance:
     _ERROR_ALREADY_EXISTS = 183
 
-    def __init__(self, name: str = MUTEX_NAME) -> None:
+    def __init__(self, name: str | None = None) -> None:
         self.handle: int | None = None
         self.already_running = False
         if os.name != "nt":
             return
+        if name is None:
+            profile = os.environ.get("MOUCHEN_DESKTOP_DATA_DIR", "")
+            suffix = hashlib.sha256(os.path.normcase(os.path.abspath(profile)).encode()).hexdigest()[:16] if profile else ""
+            name = MUTEX_NAME + ("-" + suffix if suffix else "")
         kernel32 = ctypes.windll.kernel32
         kernel32.CreateMutexW.argtypes = [wintypes.LPVOID, wintypes.BOOL, wintypes.LPCWSTR]
         kernel32.CreateMutexW.restype = wintypes.HANDLE

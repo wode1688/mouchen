@@ -1268,12 +1268,16 @@ def test_backfill_is_explicit_dry_run_newest_first_and_hard_bounded(
     main.repo = main.Repository(tmp_path / "backfill.db")
     main.service = main.ProactiveService(main.repo)
     main.models = RecordingGateway()
+    # Explicit observation times keep the newest-first assertion independent
+    # of the host clock resolution and how quickly SQLite inserts the fixture.
+    oldest = datetime.now(timezone.utc) - timedelta(minutes=5)
     for index in range(130):
         assert main.repo.insert_event(
             Event(
                 user_id="u1",
                 source="android.thought",
                 type="thought.note",
+                occurred_at=oldest + timedelta(seconds=index),
                 facts={"text": f"historical thought {index}"},
             )
         )
