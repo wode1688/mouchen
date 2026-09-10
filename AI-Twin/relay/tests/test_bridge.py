@@ -37,6 +37,11 @@ class IdempotentBackend:
     def __init__(self):
         self.receipts = {}
         self.failed = False
+        self.config = {'backend_url': 'http://127.0.0.1:8788', 'session_user_id': 'synthetic-owner',
+                       'desktop_device_id': 'desktop'}
+
+    def verify_session(self):
+        pass
 
     def apply(self, request):
         if self.failed:
@@ -67,7 +72,7 @@ class BridgeTests(unittest.TestCase):
         self.http = self.enterContext(TestClient(self.server.app))
         self.phone = TestTransport(self.http, 'phone')
         self.desktop = TestTransport(self.http, 'desktop')
-        self.config = {'state_dir': str(self.root / 'local'), 'archive_dir': str(self.root / 'archive'),
+        self.config = {'url': 'https://relay.example.invalid', 'state_dir': str(self.root / 'local'), 'archive_dir': str(self.root / 'archive'),
                        'device': 'desktop', 'targets': ['phone']}
         self.backend = IdempotentBackend()
         self.bridge = Bridge(self.config, self.desktop, self.backend)
@@ -193,6 +198,53 @@ class BridgeTests(unittest.TestCase):
         self.bridge.cycle()
         self.assertEqual(len(self.backend.receipts), 0)
         self.assertEqual(self.bridge.db.execute('SELECT outcome FROM received').fetchone()[0], 'quarantined')
+
+    def test_state_cannot_be_reused_by_another_account_or_origin(self):
+        other = IdempotentBackend()
+        other.config = {**other.config, 'session_user_id': 'another-synthetic-owner'}
+        with self.assertRaisesRegex(ValueError, 'another account'):
+            Bridge(self.config, self.desktop, other)
+        with self.assertRaisesRegex(ValueError, 'another account'):
+            Bridge({**self.config, 'url': 'https://other.example.invalid'}, self.desktop, self.backend)
+
+    def test_revoked_or_switched_local_session_stops_receive_and_send(self):
+        self.upload(self.request())
+        self.bridge.cycle()
+        pending = len(self.phone.request('GET', '/v1/inbox')['items'])
+        self.upload(self.request())
+        def revoked():
+            raise ValueError('synthetic account mismatch')
+        self.backend.verify_session = revoked
+        status = self.bridge.cycle()
+        self.assertFalse(status['healthy'])
+        self.assertEqual(status['downloaded'], 0)
+        self.assertEqual(status['processed'], 0)
+        self.assertEqual(status['uploaded'], 0)
+        self.assertEqual(len(self.backend.receipts), 1)
+        self.assertEqual(len(self.phone.request('GET', '/v1/inbox')['items']), pending)
+
+    def test_pause_between_imports_keeps_remaining_records_pending(self):
+        self.upload(self.request())
+        self.upload(self.request())
+        original = self.backend.apply
+        def apply_then_pause(value):
+            response = original(value)
+            (self.bridge.state / 'stop-sync').touch()
+            return response
+        self.backend.apply = apply_then_pause
+        result = self.bridge.cycle()
+        self.assertEqual(result['processed'], 1)
+        self.assertEqual(result['pending_processing'], 1)
+        self.assertEqual(result['uploaded'], 0)
+        self.assertEqual(len(self.backend.receipts), 1)
+
+    def test_unbound_existing_inbox_does_not_adopt_current_identity(self):
+        self.upload(self.request())
+        self.bridge.cycle()
+        with self.bridge.db:
+            self.bridge.db.execute('DELETE FROM identity')
+        with self.assertRaisesRegex(ValueError, 'unbound inbox'):
+            Bridge(self.config, self.desktop, self.backend)
 
 
 if __name__ == '__main__':

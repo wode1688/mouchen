@@ -47,7 +47,7 @@ def setup(profile: Path, *, port: int = 8788, device_id: str = "desktop", protec
     The random recovery password and access token remain DPAPI protected. No
     collection consent is created, and no cloud model permission is inherited.
     """
-    if not 1024 <= port <= 65535 or not re.fullmatch(r"[A-Za-z0-9_.-]{1,160}", device_id):
+    if not 1024 <= port <= 65535 or not re.fullmatch(r"[A-Za-z0-9_-]{1,48}", device_id):
         raise ValueError("invalid local port or device id")
     profile = profile.expanduser().resolve()
     source_root = APP_ROOT.parent

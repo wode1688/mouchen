@@ -115,11 +115,13 @@ class Relay:
                     item.update(json.load(response))
         return item
 
-    def pull(self, archive, on_saved=None):
+    def pull(self, archive, on_saved=None, should_stop=None):
         archive = Path(archive).resolve()
         archive.mkdir(parents=True, exist_ok=True)
         received = []
         for item in self.request('GET', '/v1/inbox')['items']:
+            if should_stop is not None and should_stop():
+                break
             uid = item['id']
             if not re.fullmatch('[0-9a-f]{32}', uid):
                 raise ValueError('Invalid transfer identifier')

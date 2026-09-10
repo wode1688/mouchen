@@ -9,6 +9,7 @@
 | [Android](AI-Twin/android/) / [iOS](AI-Twin/ios/) | 手机客户端源码 |
 | [业务后端](AI-Twin/backend/) | 原业务服务源码 |
 | [临时中转](AI-Twin/relay/) | 临时数据传输与电脑伴随程序 |
+| [手机与电脑本地处理](AI-Twin/docs/relay-local-sync.md) | Android 主动提交、电脑规则分析和建议回传 |
 | [多工具协作](AI-Twin/docs/multi-agent-development.md) | 分工、独立目录和交接流程 |
 | [交接记录](AI-Twin/docs/handoffs/) | 已完成内容、验证和下一步 |
 
@@ -25,7 +26,7 @@ cd mouchen/AI-Twin
 python tools/ai_workspace.py --tool codex --task issue-101-sync
 ```
 
-本次目录整理若尚未合并到主分支，先获取并切换到 `codex/cloud-relay-sync`，创建任务时使用 `--base origin/codex/cloud-relay-sync`。工具脚本不会自动启动 AI 或部署服务。
+工具脚本为每个执行者创建独立任务目录，不会自动启动 AI 或部署服务。
 
 共同规则在根目录 [AGENTS.md](AGENTS.md)；Claude Code 通过 [CLAUDE.md](CLAUDE.md) 引用它。应用目录内的相对命令都应从 `AI-Twin/` 执行。任务、讨论和验收使用仓库的 Issues、Pull Requests 和 Actions。
 

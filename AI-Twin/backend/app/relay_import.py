@@ -23,7 +23,7 @@ class RelayEnvelope(BaseModel):
     schema_name: Literal["ai-twin.sync/v1"] = Field(alias="schema")
     kind: Literal["request"]
     message_id: UUID
-    sender: str = Field(min_length=1, max_length=160, pattern=r"^[a-zA-Z0-9_.-]+$")
+    sender: str = Field(min_length=1, max_length=48, pattern=r"^[a-zA-Z0-9_-]+$")
     created_at: datetime
     operation: Literal["goal.create", "event.create", "feedback.create", "snapshot.get"]
     body: dict[str, Any]

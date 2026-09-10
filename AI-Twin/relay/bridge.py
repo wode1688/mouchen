@@ -34,7 +34,20 @@ class LocalBackend:
                            entropy=config.get('dpapi_entropy', 'mouchen-desktop-v1').encode()).decode()
         self.opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
 
+    def verify_session(self):
+        call = urllib.request.Request(self.url + '/v1/session',
+            headers={'Authorization': 'Bearer ' + self.token})
+        with self.opener.open(call, timeout=10) as response:
+            raw = response.read(65537)
+        if len(raw) > 65536:
+            raise ValueError('Unexpected local session response')
+        session = json.loads(raw)
+        if (session.get('user_id') != self.config['session_user_id']
+                or session.get('device_id') != self.config['desktop_device_id']):
+            raise ValueError('Local session does not match this paired account and device')
+
     def apply(self, request):
+        self.verify_session()
         call = urllib.request.Request(self.url + '/v1/relay/import', data=encode(request), method='POST',
             headers={'Authorization': 'Bearer ' + self.token, 'Content-Type': 'application/json',
                      'X-Proactive-Cloud-Approved': 'false', 'X-Raw-Cloud-Approved': 'false'})
@@ -63,6 +76,7 @@ def connect(path):
         PRIMARY KEY(sender,message_id));
       CREATE TABLE IF NOT EXISTS received (
         transfer_id TEXT PRIMARY KEY, path TEXT NOT NULL, outcome TEXT NOT NULL, received_at REAL NOT NULL);
+      CREATE TABLE IF NOT EXISTS identity (id INTEGER PRIMARY KEY CHECK(id=1), binding TEXT NOT NULL);
     ''')
     return db
 
@@ -76,9 +90,29 @@ class Bridge:
             raise ValueError('Configure a unique device and its paired peer devices')
         self.state = Path(config['state_dir'])
         self.db = connect(self.state / 'bridge.sqlite3')
+        binding = json.dumps({'version': 1, 'backend_url': backend.config['backend_url'].rstrip('/'),
+            'user_id': backend.config['session_user_id'], 'device': self.device,
+            'relay_url': config['url'].rstrip('/')}, sort_keys=True)
+        try:
+            with self.db:
+                self.db.execute('BEGIN IMMEDIATE')
+                previous = self.db.execute('SELECT binding FROM identity WHERE id=1').fetchone()
+                if previous is None:
+                    if any(self.db.execute('SELECT count(*) FROM ' + table).fetchone()[0]
+                           for table in ('received', 'inbox', 'deliveries')):
+                        raise ValueError('Existing unbound inbox requires a separate state directory')
+                    self.db.execute('INSERT INTO identity VALUES(1,?)', (binding,))
+                elif previous['binding'] != binding:
+                    raise ValueError('The relay state belongs to another account or connection; use a separate state directory')
+        except Exception:
+            self.db.close()
+            raise
 
     def close(self):
         self.db.close()
+
+    def stopped(self):
+        return (self.state / 'stop-sync').exists()
 
     def saved(self, path, manifest):
         """Commit a durable inbox before transport ACK; processing can retry offline."""
@@ -113,6 +147,8 @@ class Bridge:
     def process(self):
         count = 0
         for row in self.db.execute("SELECT * FROM inbox WHERE status='pending' ORDER BY created_at LIMIT 100").fetchall():
+            if self.stopped():
+                break
             request = json.loads(row['request'])
             key = (row['sender'], row['message_id'])
             try:
@@ -142,6 +178,8 @@ class Bridge:
         rows = self.db.execute("""SELECT d.*,i.response FROM deliveries d JOIN inbox i
           USING(sender,message_id) WHERE d.status!='delivered' ORDER BY i.created_at LIMIT 100""").fetchall()
         for row in rows:
+            if self.stopped():
+                break
             key = (row['sender'], row['message_id'])
             attempt = row['attempt']
             if row['transfer_id']:
@@ -187,18 +225,25 @@ class Bridge:
         errors = []
         downloaded = 0
         identity_verified = False
+        session_verified = False
+        try:
+            self.backend.verify_session()
+            session_verified = True
+        except Exception as exc:
+            errors.append('local-session:' + type(exc).__name__)
         try:
             remote = self.relay.request('GET', '/v1/status')
             if remote.get('device') != self.device:
                 raise ValueError('Relay credential belongs to a different device')
             identity_verified = True
-            downloaded = len(self.relay.pull(self.config['archive_dir'], self.saved))
+            if session_verified:
+                downloaded = len(self.relay.pull(self.config['archive_dir'], self.saved, should_stop=self.stopped))
         except Exception as exc:
             errors.append('receive:' + type(exc).__name__)
-        processed = self.process()
+        processed = self.process() if session_verified else 0
         uploaded = 0
         try:
-            if identity_verified:
+            if identity_verified and session_verified:
                 uploaded = self.send()
         except Exception as exc:
             errors.append('send:' + type(exc).__name__)
