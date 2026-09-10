@@ -42,6 +42,7 @@ jobs:
           python client.py --help
           python companion.py --help
           python configure.py --help
+          python bridge.py --help
   demo:
     runs-on: ubuntu-latest
     defaults:
