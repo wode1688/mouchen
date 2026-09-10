@@ -118,7 +118,8 @@ class PinyinEngineTest {
 
         assertEquals("你好", bundled.candidates("nihao", ImeInputMode.FULL_PINYIN).first().text)
         assertEquals("你好", bundled.candidates("nihk", ImeInputMode.NATURAL_CODE).first().text)
-        assertEquals("AI替身", bundled.candidates("mouchen", ImeInputMode.FULL_PINYIN).first().text)
+        // Test the checked-in phonetic dictionary, independently of app branding.
+        assertEquals("谋臣", bundled.candidates("mouchen", ImeInputMode.FULL_PINYIN).first().text)
         assertEquals("自然码", bundled.candidates("zirjma", ImeInputMode.NATURAL_CODE).first().text)
         assertEquals("爱", bundled.candidates("ai", ImeInputMode.NATURAL_CODE).first().text)
         assertTrue(bundled.candidates("sh", ImeInputMode.FULL_PINYIN).any { it.text == "时间" })

@@ -58,3 +58,11 @@ jobs:
           gradle --no-daemon --console=plain --stacktrace
           assemble${{ matrix.variant }}Debug
           test${{ matrix.variant }}DebugUnitTest
+      - name: Keep tested debug APK for device verification
+        uses: actions/upload-artifact@v7
+        with:
+          name: android-${{ matrix.variant }}-debug
+          path: AI-Twin/android/app/build/outputs/apk/*/debug/*.apk
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0

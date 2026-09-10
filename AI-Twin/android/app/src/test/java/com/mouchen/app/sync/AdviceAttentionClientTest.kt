@@ -176,7 +176,7 @@ class AdviceAttentionClientTest {
 
     private companion object {
         const val ADVICE_ID = "550e8400-e29b-41d4-a716-446655440000"
-        const val CLAIM_TOKEN = "claim-token-test"
+        const val CLAIM_TOKEN = "7d6f5251-405b-4f11-b8a3-359efb21f504"
         const val DEVICE_ID = "3c37c173-7f63-448c-b2be-967771f7d71c"
     }
 }
@@ -356,6 +356,6 @@ class AdviceAttentionCoordinatorTest {
 
     private companion object {
         const val ADVICE_ID = "550e8400-e29b-41d4-a716-446655440000"
-        const val CLAIM_TOKEN = "claim-token-test"
+        const val CLAIM_TOKEN = "7d6f5251-405b-4f11-b8a3-359efb21f504"
     }
 }

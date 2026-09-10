@@ -80,11 +80,11 @@ class OutboundCredentialSanitizerTest {
             "PIN 4321",
             "OTP 654321",
             "api_key: api-value-that-must-not-leak",
-            "github_" + "pat_synthetic-test-value",
-            "ghp_" + "synthetic-test-value",
+            "github_" + "pat_" + "S".repeat(24),
+            "ghp_" + "S".repeat(24),
             "xoxb-" + "synthetic-test-value",
-            "AIza" + "synthetic-test-value",
-            "AKIA" + "SYNTHETICTESTVALUE",
+            "AIza" + "S".repeat(35),
+            "AKIA" + "S".repeat(16),
             "https://owner:basic-auth-password@example.test/path",
         ).joinToString(" | ")
 
@@ -99,7 +99,7 @@ class OutboundCredentialSanitizerTest {
             "ghp_",
             "xoxb-",
             "AIza",
-            "AKIA" + "SYNTHETICTESTVALUE",
+            "AKIA" + "S".repeat(16),
             "basic-auth-password",
         ).forEach { secret -> assertFalse("Leaked: $secret", sanitized.contains(secret)) }
         assertTrue(sanitized.contains(OutboundCredentialSanitizer.MARKER))
