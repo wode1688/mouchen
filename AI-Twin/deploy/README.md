@@ -23,7 +23,7 @@ Install Docker Engine with the Compose v2 plugin from Docker's official
 repository. Put this repository at `/opt/mouchen`, then:
 
 ```sh
-cd /opt/mouchen/deploy
+cd /opt/mouchen/AI-Twin/deploy
 cp env.example .env
 chmod 600 .env
 ```
@@ -55,7 +55,7 @@ When adopting this gate on an already running older installation, preserve the
 deployed files before pulling or editing them:
 
 ```sh
-cd /opt/mouchen/deploy
+cd /opt/mouchen/AI-Twin/deploy
 cp compose.yaml rollback-bootstrap.compose.yaml
 cp .env rollback-bootstrap.env
 ```
@@ -64,8 +64,8 @@ After the new scripts are present, but before the first guarded deployment or
 any `.env` change, bind that old source to the running containers:
 
 ```sh
-MOUCHEN_CONTRACT_SOURCE_FILE=/opt/mouchen/deploy/rollback-bootstrap.compose.yaml \
-MOUCHEN_ENV_FILE=/opt/mouchen/deploy/rollback-bootstrap.env \
+MOUCHEN_CONTRACT_SOURCE_FILE=/opt/mouchen/AI-Twin/deploy/rollback-bootstrap.compose.yaml \
+MOUCHEN_ENV_FILE=/opt/mouchen/AI-Twin/deploy/rollback-bootstrap.env \
   sh scripts/capture-compose-contract.sh
 ```
 

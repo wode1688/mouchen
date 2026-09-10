@@ -1,6 +1,6 @@
 # 多台电脑统一修改 AI 替身
 
-所有平台继续使用同一个仓库：`https://github.com/wode1688/mouchen`。Windows、Android、iOS、后端和临时中转分别在各自目录，修改通过 Git 提交记录保留。
+所有平台继续使用同一个仓库：`https://github.com/wode1688/mouchen`。Windows、Android、iOS、后端和临时中转分别在 `AI-Twin/` 下的各自目录，修改通过 Git 提交记录保留。共同开发规则、贡献说明、安全政策、许可证和 GitHub 配置留在仓库根目录。
 
 同时使用 Codex、Claude Code、Hermes 等工具时，请按 [多 AI 工具协作说明](multi-agent-development.md) 分配独立任务目录，并通过统一规则和任务记录交接。
 
@@ -12,6 +12,8 @@ cd mouchen
 git config user.name "你的 GitHub 用户名"
 git config user.email "GitHub 提供的 noreply 邮箱"
 ```
+
+本文的 Git 命令从仓库根目录 `mouchen/` 执行。安装应用依赖、运行演示或使用应用启动脚本时，进入 `AI-Twin/`，按该目录的 [README](../README.md) 操作。若目录调整尚未合并到主分支，先切换到对应 PR 的功能分支。
 
 需要上传修改的电脑应通过 GitHub CLI、Git Credential Manager 或 SSH 登录。GitHub 账号密码不能直接用于 Git 推送。参见 [GitHub 认证说明](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github)。不要把密码写进仓库地址或配置示例。
 
@@ -30,16 +32,16 @@ git switch -c feature/describe-your-change
 
 ## 修改完成后
 
-运行受影响组件的测试和根目录虚拟演示；检查修改中不含个人数据或真实配置，再提交具体文件：
+运行受影响组件的测试，并在 `AI-Twin/` 应用目录运行 `python examples/demo.py` 虚拟演示；然后回到仓库根目录，检查修改中不含个人数据或真实配置，再提交具体文件：
 
 ```powershell
 git diff
-git add path/to/changed-file
+git add AI-Twin/path/to/changed-file
 git commit -m "说明这次解决了什么问题"
 git push -u origin HEAD
 ```
 
-在 GitHub 创建 Pull Request，写清问题、变化和验证结果。测试通过后合并，再让其他电脑拉取最新主分支。较大改动先开 Issue 说明方案，遵循根目录的 [贡献说明](../CONTRIBUTING.md)。
+在 GitHub 创建 Pull Request，写清问题、变化和验证结果。测试通过后合并，再让其他电脑拉取最新主分支。较大改动先开 Issue 说明方案，遵循仓库根目录的 [贡献说明](../../CONTRIBUTING.md)。
 
 ## 换电脑继续同一个修改
 
@@ -70,3 +72,5 @@ git switch --track origin/feature/describe-your-change
 源码目录不用于存放同步的业务数据；GitHub 不充当个人数据库。Windows DPAPI 配置和加密数据库绑定原 Windows 用户，不能依赖 GitHub 复制到其他电脑后直接解密。
 
 代码合并不会自动升级正在运行的服务器，也不会自动覆盖已安装的 EXE。部署前选择经过测试的提交，保留回退版本；见 [中转部署说明](../deploy/relay/README.md)。
+
+当前整理的是现有仓库源码及后续修改；尚未通过可复现构建确认其与已安装的 `AI-Twin.exe` 完全一致。需要更新安装程序时，应另外完成构建和对应客户端验证。

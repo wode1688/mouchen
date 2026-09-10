@@ -34,6 +34,7 @@ def slug(value: str) -> str:
 def create_workspace(args: argparse.Namespace) -> tuple[Path, str, Path]:
     source = Path(__file__).resolve().parents[1]
     repo = Path(git(source, "rev-parse", "--show-toplevel").stdout.strip()).resolve()
+    project_relative = source.relative_to(repo)
     branch = f"ai/{args.tool}/{args.task}"
     container = repo.parent / f"{repo.name}-worktrees"
     target = container / f"{args.tool}-{args.task}"
@@ -51,7 +52,7 @@ def create_workspace(args: argparse.Namespace) -> tuple[Path, str, Path]:
     base = git(repo, "rev-parse", "--verify", "--end-of-options", f"{args.base}^{{commit}}").stdout.strip()
     if git(repo, "cat-file", "-e", f"{base}:AGENTS.md", check=False).returncode:
         raise RuntimeError("Base does not contain shared AGENTS.md; select the collaboration branch with --base.")
-    record_name = f"docs/handoffs/{args.task}-{args.tool}.md"
+    record_name = (project_relative / "docs" / "handoffs" / f"{args.task}-{args.tool}.md").as_posix()
     if git(repo, "cat-file", "-e", f"{base}:{record_name}", check=False).returncode == 0:
         raise RuntimeError("A handoff record for this task already exists in the base commit.")
     container.mkdir(exist_ok=True)

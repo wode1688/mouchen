@@ -29,6 +29,7 @@ class WorkspaceTests(unittest.TestCase):
         self.git("config", "user.email", "developer@example.invalid")
         (self.repo / "tools").mkdir()
         shutil.copy2(SCRIPT, self.repo / "tools" / SCRIPT.name)
+        self.script = self.repo / "tools" / SCRIPT.name
         (self.repo / "AGENTS.md").write_text("Synthetic project instructions.\n", encoding="utf-8")
         (self.repo / "sample.txt").write_text("original\n", encoding="utf-8")
         self.git("add", ".")
@@ -43,7 +44,7 @@ class WorkspaceTests(unittest.TestCase):
         )
 
     def create(self, tool="codex", task="task-one", base="HEAD", offline=True):
-        command = [sys.executable, str(self.repo / "tools" / SCRIPT.name),
+        command = [sys.executable, str(self.script),
                    "--tool", tool, "--task", task, "--base", base]
         if offline:
             command.append("--offline")
@@ -75,6 +76,19 @@ class WorkspaceTests(unittest.TestCase):
         marker.write_text("keep this task", encoding="utf-8")
         self.assertNotEqual(self.create().returncode, 0)
         self.assertEqual(marker.read_text(), "keep this task")
+
+    def test_nested_application_keeps_handoff_inside_application(self):
+        application = self.repo / "AI-Twin"
+        application.mkdir()
+        self.assertTrue(application.resolve().is_relative_to(self.root))
+        self.assertTrue((self.repo / "tools").resolve().is_relative_to(self.root))
+        self.git("mv", "tools", "AI-Twin/tools")
+        self.git("commit", "-m", "Put source in the application directory")
+        self.script = application / "tools" / SCRIPT.name
+        result = self.create()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue((self.target() / "AI-Twin/docs/handoffs/task-one-codex.md").is_file())
+        self.assertFalse((self.target() / "docs").exists())
 
     def test_traversal_and_invalid_names_create_nothing(self):
         for name in ("../escape", "task/one", "a;echo", "..", "x" * 65):

@@ -1,6 +1,6 @@
 # 部署独立临时中转服务
 
-这些模板用于 Linux 服务端。源码位于仓库的 `relay/`，配置和数据库放在源码之外。这里没有真实服务器地址、令牌或证书。
+这些模板用于 Linux 服务端。源码位于仓库的 `AI-Twin/relay/`，下文的 `relay/` 相对路径均从应用目录 `AI-Twin/` 出发，配置和数据库放在源码之外。这里没有真实服务器地址、令牌或证书。
 
 部署前选择已经通过测试的提交，在部署记录中保存完整提交号。GitHub 的代码合并不会自动部署，也不会更新已安装的桌面程序。
 
@@ -9,12 +9,12 @@
 | 用途 | 路径 |
 |---|---|
 | 仓库检出 | `/opt/mouchen` |
-| 中转源码与独立虚拟环境 | `/opt/mouchen/relay` 和该目录中的 `.venv` |
+| 中转源码与独立虚拟环境 | `/opt/mouchen/AI-Twin/relay` 和该目录中的 `.venv` |
 | 私有配置 | `/etc/ai-relay/config.json` |
 | SQLite 和临时文件 | `/var/lib/ai-relay` |
 | 服务账户 | `ai-relay`，无交互登录 shell |
 
-在服务端检出经过验证的提交后，进入 `relay/`，运行 `python3 -m venv .venv` 和 `.venv/bin/python -m pip install -r requirements.lock`。不要与原业务后端共用虚拟环境。
+在服务端检出经过验证的提交后，从仓库根目录进入 `AI-Twin/relay/`，运行 `python3 -m venv .venv` 和 `.venv/bin/python -m pip install -r requirements.lock`。不要与原业务后端共用虚拟环境。
 
 ## 配置
 

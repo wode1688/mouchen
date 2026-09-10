@@ -6,14 +6,16 @@
 
 ~~~powershell
 git clone https://github.com/wode1688/mouchen.git
-cd mouchen
+cd mouchen/AI-Twin
 python -m venv .venv
-.\.venv\Scripts\python -m pip install -r backend\requirements.txt
-cd backend
+.\.venv\Scripts\python -m pip install -r requirements.txt -r backend\requirements.txt
+Push-Location backend
 ..\.venv\Scripts\python -m pytest -q
+Pop-Location
+.\.venv\Scripts\python examples\demo.py
 ~~~
 
-提交 Pull Request 前，请保证受影响平台的测试通过，并运行根目录的虚拟演示。客户端、测试、截图和日志只能使用虚拟或彻底脱敏的数据。
+应用源码与运行命令位于仓库的 `AI-Twin/` 目录；仓库根目录保留共同规则、贡献说明、安全政策与许可证。提交 Pull Request 前，请保证受影响平台的测试通过，并在 `AI-Twin/` 应用目录运行 `examples/demo.py` 虚拟演示。客户端、测试、截图和日志只能使用虚拟或彻底脱敏的数据。
 
 ## 适合优先贡献的内容
 

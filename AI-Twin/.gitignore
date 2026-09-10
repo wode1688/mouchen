@@ -1,0 +1,72 @@
+# Python and test output
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.pytest-*/
+.pytest-tmp*/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Runtime and personal data
+backend/data/
+backend/.runtime/
+desktop/.runtime/
+artifacts/
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.log
+
+# Credentials, signing material, and private infrastructure
+.env
+.env.*
+!.env.example
+!**/.env.example
+deploy/secrets/*
+!deploy/secrets/.gitignore
+deploy/backups/
+.tools/
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.mobileprovision
+google-services.json
+android/local.properties
+ios/Config/Secrets.xcconfig
+
+# Android / Gradle and packaged builds
+.gradle/
+.kotlin/
+**/build/
+*.apk
+*.aab
+*.ipa
+*.exe
+*.msi
+*.dmg
+*.zip
+*.tar
+*.tar.gz
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Machine-local AI settings and session data
+AGENTS.override.md
+CLAUDE.local.md
+.claude/settings.local.json
+.hermes/
+.codex/auth.json
+.codex/sessions/

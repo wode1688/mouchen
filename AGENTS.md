@@ -2,9 +2,11 @@
 
 本仓库由 Codex、Claude Code、Hermes 和其他开发工具共同维护。这里保存项目约定；用户当前任务决定本次工作的范围。常规实现、验证和修复应在已授权范围内继续完成。
 
+应用源码根目录是 `AI-Twin/`。下文的源码目录、工具、测试命令和交接路径均相对于应用目录；仓库级 `AGENTS.md`、`CLAUDE.md`、`CONTRIBUTING.md`、`SECURITY.md` 保留在仓库根目录。在 `AI-Twin/` 执行应用的安装、测试和构建命令。
+
 ## 开始工作
 
-1. 阅读 `README.md`、`CONTRIBUTING.md`、`SECURITY.md` 和相关目录说明。
+1. 阅读仓库及应用的 `README.md`、仓库根目录 `CONTRIBUTING.md`、`SECURITY.md` 和相关目录说明。
 2. 查看当前分支、未提交修改和近期提交，阅读当前任务的 Issue 与 `docs/handoffs/` 中的交接记录。核实记录对应的提交，不把旧记录当成当前事实。
 3. 一个任务确定一个主要执行者、一个分支和一个独立工作目录。多个工具同时写代码时各用独立 worktree 或克隆；不要在别人的工作目录切换分支或改写文件。
 4. 大改先记录 Issue 的目标、范围、验收方式和分工。网络或认证未就绪时，先保存本地任务记录并继续独立工作，说明远端记录尚未建立。
@@ -27,9 +29,9 @@
 
 ## 验证与交付
 
-- 执行受影响平台所需检查；提交 PR 前按 `CONTRIBUTING.md` 运行根目录虚拟演示：安装根 `requirements.txt` 后执行 `python examples/demo.py`。
+- 执行受影响平台所需检查；提交 PR 前按仓库 `CONTRIBUTING.md` 运行应用目录虚拟演示：在 `AI-Twin/` 安装 `requirements.txt` 后执行 `python examples/demo.py`。
 - 中转代码：在 `relay/` 安装 `requirements-dev.txt`，执行 `python -m unittest discover -s tests -v`。
-- 协作辅助脚本：在根目录执行 `python -m unittest discover -s tools/tests -v`，仅使用临时虚拟仓库。
+- 协作辅助脚本：在 `AI-Twin/` 执行 `python -m unittest discover -s tools/tests -v`，仅使用临时虚拟仓库。
 - 区分本地测试与 GitHub Actions 结果。上传后回读远端分支和 PR，不能把本地提交说成已上传。
 - 代码合并与运行部署是两件事。报告实际提交、验证结果以及尚未完成的发布或部署。
 

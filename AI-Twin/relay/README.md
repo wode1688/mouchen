@@ -24,7 +24,7 @@ cd mouchen
 git fetch origin
 # 如果该功能分支尚未合并：
 git switch --track origin/codex/cloud-relay-sync
-cd relay
+cd AI-Twin/relay
 .\scripts\setup.ps1
 .\.venv\Scripts\python -m unittest discover -s tests -v
 ```

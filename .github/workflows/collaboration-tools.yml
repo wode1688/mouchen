@@ -3,17 +3,17 @@ name: Collaboration tools
 on:
   push:
     paths:
-      - 'tools/**'
+      - 'AI-Twin/tools/**'
       - 'AGENTS.md'
       - 'CLAUDE.md'
-      - 'docs/multi-agent-development.md'
+      - 'AI-Twin/docs/multi-agent-development.md'
       - '.github/workflows/collaboration-tools.yml'
   pull_request:
     paths:
-      - 'tools/**'
+      - 'AI-Twin/tools/**'
       - 'AGENTS.md'
       - 'CLAUDE.md'
-      - 'docs/multi-agent-development.md'
+      - 'AI-Twin/docs/multi-agent-development.md'
       - '.github/workflows/collaboration-tools.yml'
 
 permissions:
@@ -21,6 +21,9 @@ permissions:
 
 jobs:
   workspaces:
+    defaults:
+      run:
+        working-directory: AI-Twin
     strategy:
       fail-fast: false
       matrix:
