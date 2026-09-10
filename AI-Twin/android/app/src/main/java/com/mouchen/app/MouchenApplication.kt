@@ -18,6 +18,7 @@ class MouchenApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         System.loadLibrary("sqlcipher")
+        runCatching { com.mouchen.app.relay.RelaySyncWorker.configure(this) }
         if (!legacyMigrationAllowsAuthenticatedWork(this)) return
         CollectionScheduler.ensurePeriodic(this)
         SessionHealthWorker.enqueueNow(this)
