@@ -1,0 +1,53 @@
+name: Relay tests
+
+on:
+  push:
+    paths:
+      - 'relay/**'
+      - '.github/workflows/relay-tests.yml'
+  pull_request:
+    paths:
+      - 'relay/**'
+      - '.github/workflows/relay-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  relay:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.11', '3.12']
+    defaults:
+      run:
+        working-directory: relay
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            relay/requirements.lock
+            relay/requirements-dev.txt
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Run isolated tests
+        run: python -m unittest discover -s tests -v
+      - name: Validate command line interfaces
+        run: |
+          python client.py --help
+          python companion.py --help
+          python configure.py --help
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt
+      - run: python examples/demo.py

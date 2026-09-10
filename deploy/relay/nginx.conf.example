@@ -1,0 +1,31 @@
+# Replace example host/certificate paths before enabling this configuration.
+limit_req_zone $binary_remote_addr zone=relay_api:10m rate=20r/s;
+limit_conn_zone $binary_remote_addr zone=relay_connections:10m;
+
+server {
+    listen 443 ssl;
+    server_name relay.example.com;
+    ssl_certificate /etc/letsencrypt/live/relay.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/relay.example.com/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    server_tokens off;
+    access_log off;
+    client_max_body_size 100m;
+    client_body_timeout 60s;
+    limit_conn relay_connections 8;
+    add_header X-Content-Type-Options nosniff always;
+    add_header Cache-Control no-store always;
+
+    location / {
+        limit_req zone=relay_api burst=40 nodelay;
+        proxy_pass http://127.0.0.1:8788;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_request_buffering off;
+        proxy_buffering off;
+        proxy_read_timeout 650s;
+        proxy_send_timeout 650s;
+    }
+}
