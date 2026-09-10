@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import bisect
+import os
 import queue
 import re
 import threading
@@ -508,7 +509,10 @@ class CollectionConsentDialog:
                 self.cloud_analysis,
             ),
         )
+        local_processing = os.environ.get("MOUCHEN_MODEL_PROVIDER") == "rules"
         for title, detail, variable in choices:
+            if local_processing and variable is self.cloud_analysis:
+                continue
             row = ttk.Frame(frame)
             row.pack(fill="x", pady=6)
             ttk.Checkbutton(row, text=title, variable=variable).pack(anchor="w")
@@ -522,6 +526,9 @@ class CollectionConsentDialog:
         ttk.Label(
             frame,
             text=(
+                "当前使用电脑本地处理。记录保存在这台电脑，不调用外部 AI 模型。"
+                "可以全部不开启，先查看手机同步过来的目标和建议。"
+            ) if local_processing else (
                 "勾选信息来源表示该来源的数据会加密同步到你的AI替身账号。云分析关闭时，"
                 "不会把这些事件交给外部 AI 模型；“允许远程全文”仍需在高级设置中另行开启。"
             ),
@@ -584,7 +591,8 @@ class CollectionConsentDialog:
 class MouchenWindow:
     def __init__(self, root: tk.Tk) -> None:
         self.root = root
-        self.root.title("AI替身 · Windows 私测版")
+        self.root.title("AI替身 · 电脑本地处理" if os.environ.get("MOUCHEN_MODEL_PROVIDER") == "rules"
+                        else "AI替身 · Windows 私测版")
         self.root.geometry("1120x760")
         self.root.minsize(940, 650)
         self.root.configure(bg=COLORS["window"])
@@ -1509,7 +1517,10 @@ class MouchenWindow:
         self._settings_row(5, "主动复盘间隔（分钟）", ttk.Entry(self.settings_tab, textvariable=self.var_review, width=12), sticky="w")
         toggles = ttk.Frame(self.settings_tab)
         toggles.grid(row=6, column=1, sticky="w", pady=8)
-        ttk.Checkbutton(toggles, text="主动云分析", variable=self.var_cloud).pack(anchor="w", pady=3)
+        if os.environ.get("MOUCHEN_MODEL_PROVIDER") != "rules":
+            ttk.Checkbutton(toggles, text="主动云分析", variable=self.var_cloud).pack(anchor="w", pady=3)
+        else:
+            ttk.Label(toggles, text="当前为电脑本地处理，外部模型调用已关闭。").pack(anchor="w", pady=3)
         ttk.Checkbutton(toggles, text="Windows 建言通知", variable=self.var_notifications).pack(anchor="w", pady=3)
         ttk.Checkbutton(toggles, text="登录 Windows 后自动运行", variable=self.var_startup).pack(anchor="w", pady=3)
         ttk.Checkbutton(toggles, text="允许远程后端接收全文", variable=self.var_remote_full).pack(anchor="w", pady=3)
@@ -1622,7 +1633,9 @@ class MouchenWindow:
         ):
             raise ValueError("请先退出账号，再更换服务地址。")
         settings.backend_url = requested_backend
-        settings.proactive_cloud_enabled = self.var_cloud.get()
+        settings.proactive_cloud_enabled = (
+            self.var_cloud.get() if os.environ.get("MOUCHEN_MODEL_PROVIDER") != "rules" else False
+        )
         settings.notifications_enabled = self.var_notifications.get()
         settings.start_with_windows = self.var_startup.get()
         settings.allow_remote_full_context = self.var_remote_full.get()
