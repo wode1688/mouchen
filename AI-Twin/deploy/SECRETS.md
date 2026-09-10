@@ -5,7 +5,7 @@ history, a screenshot, or a support log. Initialize the files from a real TTY.
 When already logged in as `root`, run the hidden-input script directly:
 
 ```sh
-cd /opt/mouchen/deploy
+cd /opt/mouchen/AI-Twin/deploy
 sh scripts/init-secrets.sh
 ```
 

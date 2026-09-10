@@ -1,0 +1,14 @@
+{
+  "data_dir": "./data",
+  "quota_bytes": 2147483648,
+  "max_file_bytes": 104857600,
+  "minimum_free_bytes": 2147483648,
+  "default_ttl_hours": 24,
+  "max_ttl_hours": 72,
+  "record_retention_days": 7,
+  "completed_record_limit": 10000,
+  "devices": {
+    "laptop-a": "REPLACE_WITH_SHA256_HEXDIGEST_OF_LAPTOP_A_TOKEN",
+    "laptop-b": "REPLACE_WITH_SHA256_HEXDIGEST_OF_LAPTOP_B_TOKEN"
+  }
+}

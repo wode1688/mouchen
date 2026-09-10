@@ -1,0 +1,33 @@
+[Unit]
+Description=AI Twin temporary transfer service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ai-relay
+Group=ai-relay
+WorkingDirectory=/opt/mouchen/AI-Twin/relay
+Environment=RELAY_CONFIG=/etc/ai-relay/config.json
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/mouchen/AI-Twin/relay/.venv/bin/python -m uvicorn server:app --host 127.0.0.1 --port 8788 --workers 1 --limit-concurrency 32 --timeout-keep-alive 10 --no-access-log
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+MemoryMax=384M
+CPUQuota=100%
+TasksMax=64
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/ai-relay
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=
+LockPersonality=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target

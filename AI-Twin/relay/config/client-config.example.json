@@ -1,0 +1,7 @@
+{
+  "url": "https://relay.example.com",
+  "device": "laptop-a",
+  "token": "REPLACE_WITH_THIS_DEVICE_TOKEN",
+  "targets": ["laptop-b"],
+  "export_existing_records": false
+}

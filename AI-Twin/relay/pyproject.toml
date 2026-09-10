@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-twin-relay"
+version = "1.0.0"
+description = "Bounded temporary file relay and per-computer archive client for AI Twin"
+requires-python = ">=3.11"
+dependencies = ["fastapi==0.141.1", "uvicorn==0.52.4"]
+
+[project.scripts]
+ai-twin-relay = "client:main"
+ai-twin-sync = "companion:main"
+ai-twin-configure = "configure:main"
+
+[tool.setuptools]
+py-modules = ["server", "client", "companion", "configuration", "configure"]

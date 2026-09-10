@@ -1,0 +1,38 @@
+name: Collaboration tools
+
+on:
+  push:
+    paths:
+      - 'AI-Twin/tools/**'
+      - 'AGENTS.md'
+      - 'CLAUDE.md'
+      - 'AI-Twin/docs/multi-agent-development.md'
+      - '.github/workflows/collaboration-tools.yml'
+  pull_request:
+    paths:
+      - 'AI-Twin/tools/**'
+      - 'AGENTS.md'
+      - 'CLAUDE.md'
+      - 'AI-Twin/docs/multi-agent-development.md'
+      - '.github/workflows/collaboration-tools.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  workspaces:
+    defaults:
+      run:
+        working-directory: AI-Twin
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m unittest discover -s tools/tests -v

@@ -1,0 +1,39 @@
+name: AI 协作任务
+description: 为 Codex、Claude Code、Hermes 或其他工具安排可交接的开发任务。
+title: "[任务] "
+body:
+  - type: markdown
+    attributes:
+      value: "请仅填写项目开发信息和虚拟示例。安全漏洞按 SECURITY.md 私下报告。"
+  - type: textarea
+    id: outcome
+    attributes:
+      label: 目标与验收标准
+      description: 哪个问题需要解决？怎样核实已经完成？
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: 修改范围与并行分工
+      description: 写明负责的目录或模块、相关任务及公共接口依赖。
+    validations:
+      required: true
+  - type: input
+    id: executor
+    attributes:
+      label: 当前执行者与工具
+      description: 使用项目中的负责人称呼和工具名，不填写真实设备标识。
+      placeholder: "主要执行者 / Codex、Claude Code、Hermes 或其他工具"
+    validations:
+      required: true
+  - type: textarea
+    id: progress
+    attributes:
+      label: 分支、基准和交接
+      description: 记录真实分支、基准提交、交接文件及当前下一步；开始或交接时更新。
+  - type: textarea
+    id: checks
+    attributes:
+      label: 验证计划与实际结果
+      description: 区分计划、本地执行结果和远端检查结果。
